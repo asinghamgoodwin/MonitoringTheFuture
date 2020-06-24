@@ -143,6 +143,7 @@ require(haven) # lets us read SAS files
 require(stringr) # lets us subset a string using negative numbers
 
 get_specific_data_by_years = function(path = path,
+                                      file_number,
                                       years = years,
                                       mapping = mapping,
                                       variables_to_include = variables_to_include) {
@@ -150,9 +151,9 @@ get_specific_data_by_years = function(path = path,
   
   for (this_year in years) {
     # this depends on what file the questions are in. For now, assume everything is in file 1.
-    file_name = str_c(path, "y", this_year, "_1.sas7bdat")
+    file_name = str_c(path, "y", this_year, "_", file_number, ".sas7bdat")
     
-    relevant_variables_and_years = filter(grade12_file1_mapping,
+    relevant_variables_and_years = filter(mapping,
                                           year == this_year & helpful_name %in% variables_to_include)
     original_variable_names = relevant_variables_and_years$variable_name
     rename_vector = original_variable_names
@@ -261,6 +262,7 @@ for (year in 2015:2018) {
 }
 
 smallDB = get_specific_data_by_years(path = "~/Documents/Code/MTF/MTFData/12th_grade/",
+                                    file_number = 1,
                                     years = 2015:2018,
                                     mapping = grade12_file1_mapping,
                                     variables_to_include = c("R'S ID-SERIAL #",
@@ -309,34 +311,70 @@ questions I’m interested in:
 #some functions presume file 1
 #need to figure out regex for new files
 
-grade12_file3_mapping = tibble()
+grade12_file4_mapping = tibble()
 
 for (year in 1990:2018) {
-  grade12_file3_mapping = rbind(grade12_file3_mapping,
+  grade12_file4_mapping = rbind(grade12_file4_mapping,
                                 create_mapping(path = "~/Documents/Code/MTF/MTFData/12th_grade/",
                                                year = year,
-                                               file_number = 3
+                                               file_number = 4
                                 )
   )
 }
 
 smallDB = get_specific_data_by_years(path = "~/Documents/Code/MTF/MTFData/12th_grade/",
-                                    years = 1990:2018,
-                                    mapping = grade12_file3_mapping,
-                                    variables_to_include = c("R'S ID-SERIAL #",
+                                     file_number = 4,
+                                     years = 1990:2018,
+                                     mapping = grade12_file4_mapping,
+                                     variables_to_include = c("R'S ID-SERIAL #",
                                                              "SAMPLING WEIGHT",
                                                              "R'S SEX",
-                                                             "??"))
+                                                             "MN=ACHV/WMN=HOME",
+                                                             "WMN SHD =JOB OPP",
+                                                             "GOVT DEAL ENV PR"))
 
-plot_prevalence_over_time(dataset = smallDB,
-                          variable = "??",
-                          yes_codes = c("??"),
-                          no_codes = c("??"),
-                          title = "??")
-
-plot_prevalence_over_time(dataset = smallDB,
-                          variable =  "??",
-                          yes_codes = c("??"),
-                          no_codes = c("??"),
-                          title = "??")
+knitr::kable(head(smallDB))
 ```
+
+| GOVT DEAL ENV PR | grade | MN=ACHV/WMN=HOME | R’S ID-SERIAL \# | R’S SEX | SAMPLING WEIGHT | WMN SHD =JOB OPP | year |
+| ---------------: | ----: | ---------------: | ---------------: | ------: | --------------: | ---------------: | ---: |
+|                4 |    12 |                3 |            30001 |       1 |             1.2 |                2 | 1990 |
+|                5 |    12 |                1 |            30002 |       2 |             0.9 |                5 | 1990 |
+|                3 |    12 |                3 |            30003 |       1 |             0.6 |                5 | 1990 |
+|                1 |    12 |                5 |            30004 |       1 |             0.6 |                3 | 1990 |
+|                2 |    12 |                3 |            30005 |       1 |             1.2 |                4 | 1990 |
+|                1 |    12 |                5 |            30006 |       1 |             1.8 |                4 | 1990 |
+
+``` r
+plot_prevalence_over_time(dataset = smallDB,
+                          variable = "MN=ACHV/WMN=HOME",
+                          yes_codes = c("4", "5"),
+                          no_codes = c("1", "2", "3"),
+                          title = "It is usually better for everyone involved if the man is the achiever outside the home and the woman takes care of the home and family - 12th grade, 'Mostly Agree' + 'Agree'")
+```
+
+    ## Warning: Removed 1 rows containing missing values (geom_point).
+
+    ## Warning: Removed 1 rows containing missing values (geom_text).
+
+![](mapping-to-visualization_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
+``` r
+plot_prevalence_over_time(dataset = smallDB,
+                          variable =  "WMN SHD =JOB OPP",
+                          yes_codes = c("4", "5"),
+                          no_codes = c("1", "2", "3"),
+                          title = "A woman should have exactly the same job opportunities as a man - 12th grade, 'Mostly Agree' + 'Agree'")
+```
+
+![](mapping-to-visualization_files/figure-gfm/unnamed-chunk-5-2.png)<!-- -->
+
+``` r
+plot_prevalence_over_time(dataset = smallDB,
+                          variable =  "GOVT DEAL ENV PR",
+                          yes_codes = c("4", "5"),
+                          no_codes = c("1", "2", "3"),
+                          title = "Government should take steps to deal with our environmental problems, even if it means that most of us pay higher prices or taxes - 12th grade, 'Mostly Agree' + 'Agree'")
+```
+
+![](mapping-to-visualization_files/figure-gfm/unnamed-chunk-5-3.png)<!-- -->

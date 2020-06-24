@@ -50,6 +50,7 @@ for (year in 2015:2018) {
 }
 
 smallDB = get_specific_data_by_years(path = "~/Documents/Code/MTF/MTFData/12th_grade/",
+                                    file_number = 1,
                                     years = 2015:2018,
                                     mapping = grade12_file1_mapping,
                                     variables_to_include = c("R'S ID-SERIAL #",
@@ -77,40 +78,51 @@ Here are the numbers from the [NIH website](https://www.drugabuse.gov/drug-topic
 ![Table](MTF-trends-from-NIH.png)
 
 Next step: getting longer time trends for some of the social/gender questions I'm interested in:
-```{r eval = FALSE}
+```{r}
 #what needs to change?
 #some functions presume file 1
 #need to figure out regex for new files
 
-grade12_file3_mapping = tibble()
+grade12_file4_mapping = tibble()
 
 for (year in 1990:2018) {
-  grade12_file3_mapping = rbind(grade12_file3_mapping,
+  grade12_file4_mapping = rbind(grade12_file4_mapping,
                                 create_mapping(path = "~/Documents/Code/MTF/MTFData/12th_grade/",
                                                year = year,
-                                               file_number = 3
+                                               file_number = 4
                                 )
   )
 }
 
 smallDB = get_specific_data_by_years(path = "~/Documents/Code/MTF/MTFData/12th_grade/",
-                                    years = 1990:2018,
-                                    mapping = grade12_file3_mapping,
-                                    variables_to_include = c("R'S ID-SERIAL #",
+                                     file_number = 4,
+                                     years = 1990:2018,
+                                     mapping = grade12_file4_mapping,
+                                     variables_to_include = c("R'S ID-SERIAL #",
                                                              "SAMPLING WEIGHT",
                                                              "R'S SEX",
-                                                             "??"))
+                                                             "MN=ACHV/WMN=HOME",
+                                                             "WMN SHD =JOB OPP",
+                                                             "GOVT DEAL ENV PR"))
+
+knitr::kable(head(smallDB))
 
 plot_prevalence_over_time(dataset = smallDB,
-                          variable = "??",
-                          yes_codes = c("??"),
-                          no_codes = c("??"),
-                          title = "??")
+                          variable = "MN=ACHV/WMN=HOME",
+                          yes_codes = c("4", "5"),
+                          no_codes = c("1", "2", "3"),
+                          title = "It is usually better for everyone involved if the man is the achiever outside the home and the woman takes care of the home and family - 12th grade, 'Mostly Agree' + 'Agree'")
 
 plot_prevalence_over_time(dataset = smallDB,
-                          variable =  "??",
-                          yes_codes = c("??"),
-                          no_codes = c("??"),
-                          title = "??")
+                          variable =  "WMN SHD =JOB OPP",
+                          yes_codes = c("4", "5"),
+                          no_codes = c("1", "2", "3"),
+                          title = "A woman should have exactly the same job opportunities as a man - 12th grade, 'Mostly Agree' + 'Agree'")
+
+plot_prevalence_over_time(dataset = smallDB,
+                          variable =  "GOVT DEAL ENV PR",
+                          yes_codes = c("4", "5"),
+                          no_codes = c("1", "2", "3"),
+                          title = "Government should take steps to deal with our environmental problems, even if it means that most of us pay higher prices or taxes - 12th grade, 'Mostly Agree' + 'Agree'")
 ```
 

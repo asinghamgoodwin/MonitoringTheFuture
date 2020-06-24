@@ -3,6 +3,7 @@ require(haven) # lets us read SAS files
 require(stringr) # lets us subset a string using negative numbers
 
 get_specific_data_by_years = function(path = path,
+                                      file_number,
                                       years = years,
                                       mapping = mapping,
                                       variables_to_include = variables_to_include) {
@@ -10,9 +11,9 @@ get_specific_data_by_years = function(path = path,
   
   for (this_year in years) {
     # this depends on what file the questions are in. For now, assume everything is in file 1.
-    file_name = str_c(path, "y", this_year, "_1.sas7bdat")
+    file_name = str_c(path, "y", this_year, "_", file_number, ".sas7bdat")
     
-    relevant_variables_and_years = filter(grade12_file1_mapping,
+    relevant_variables_and_years = filter(mapping,
                                           year == this_year & helpful_name %in% variables_to_include)
     original_variable_names = relevant_variables_and_years$variable_name
     rename_vector = original_variable_names
