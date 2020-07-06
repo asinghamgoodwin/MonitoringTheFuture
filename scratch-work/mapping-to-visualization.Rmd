@@ -37,7 +37,7 @@ This function takes a database, variable inside that database, and an encoding, 
 # Results
 
 Putting it all together (examples of some standard substance use questions, from file 1):
-```{r, message = FALSE}
+```{r, message = FALSE, eval = FALSE}
 grade12_file1_mapping = tibble()
 
 for (year in 2015:2018) {
@@ -77,8 +77,52 @@ Here are the numbers from the [NIH website](https://www.drugabuse.gov/drug-topic
 
 ![Table](MTF-trends-from-NIH.png)
 
+
+# PALLAVI TEST
+```{r, message = FALSE}
+grade12_file1_mapping = tibble()
+
+for (year in 2015:2018) {
+  grade12_file1_mapping = rbind(grade12_file1_mapping,
+                                create_mapping(path = "~/Documents/Code/MTF/MTFData/12th_grade/",
+                                               year = year,
+                                               file_number = 1
+                                )
+  )
+}
+
+smallDB = get_specific_data_by_years(path = "~/Documents/Code/MTF/MTFData/12th_grade/",
+                                    file_number = 1,
+                                    years = 2015:2018,
+                                    mapping = grade12_file1_mapping,
+                                    variables_to_include = c("R'S ID-SERIAL #",
+                                                             "SAMPLING WEIGHT",
+                                                             "R'S SEX",
+                                                             "#XMJ+HS/LAST30DAY"))
+
+plot_prevalence_over_time(dataset = smallDB,
+                          variable = "#XMJ+HS/LAST30DAY",
+                          yes_codes = c("5", "6", "7"),
+                          no_codes = c("1", "2", "3", "4"),
+                          title = "Marjuana/Hashish in last 30 days, HIGH useage - 12th grade")
+
+plot_prevalence_over_time(dataset = smallDB,
+                          variable =  "#XMJ+HS/LAST30DAY",
+                          yes_codes = c("2", "3", "4"),
+                          no_codes = c("1", "5", "6", "7"),
+                          title = "Marjuana/Hashish in last 30 days, LOW useage - 12th grade")
+
+plot_prevalence_over_time(dataset = smallDB,
+                          variable =  "#XMJ+HS/LAST30DAY",
+                          yes_codes = c("2", "3", "4", "5", "6", "7"),
+                          no_codes = c("1"),
+                          title = "Marjuana/Hashish in last 30 days, ANY useage - 12th grade")
+
+```
+
+
 Next step: getting longer time trends for some of the social/gender questions I'm interested in:
-```{r}
+```{r, eval = FALSE}
 #what needs to change?
 #some functions presume file 1
 #need to figure out regex for new files
