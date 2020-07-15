@@ -1,0 +1,68 @@
+---
+title: "Faith in institutions over time"
+output: github_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+require(haven)
+require(stringr)
+```
+
+# Code
+
+See the code along with brief explanations in [the other markdown doc](LINK).
+
+```{r code=xfun::read_utf8('../tools/mapping-variable-names-to-labels/create-mapping.R'), include=FALSE}
+```
+
+```{r code=xfun::read_utf8('../tools/creating-datasets/get-specific-data-by-years.R'), include=FALSE}
+```
+
+```{r code=xfun::read_utf8('../tools/visualization/plot-prevalence-over-time.R'), include=FALSE}
+```
+
+# Trends over time: faith in institutions
+
+Set up the code by creating a smaller database that includes only the "faith in institutions" questions and demographic markers that I might later sort by.
+
+```{r, eval = FALSE}
+grade12_file4_mapping = tibble()
+
+for (year in 1990:2018) {
+  grade12_file4_mapping = rbind(grade12_file4_mapping,
+                                create_mapping(path = "~/Documents/Code/MTF/MTFData/12th_grade/",
+                                               year = year,
+                                               file_number = 4
+                                )
+  )
+}
+
+smallDB = get_specific_data_by_years(path = "~/Documents/Code/MTF/MTFData/12th_grade/",
+                                     file_number = 4,
+                                     years = 1990:2018,
+                                     mapping = grade12_file4_mapping,
+                                     variables_to_include = c("R'S ID-SERIAL #",
+                                                             "SAMPLING WEIGHT",
+                                                             "R'S SEX",
+                                                             ))
+
+plot_prevalence_over_time(dataset = smallDB,
+                          variable = "MN=ACHV/WMN=HOME",
+                          yes_codes = c("4", "5"),
+                          no_codes = c("1", "2", "3"),
+                          title = "It is usually better for everyone involved if the man is the achiever outside the home and the woman takes care of the home and family - 12th grade, 'Mostly Agree' + 'Agree'")
+
+plot_prevalence_over_time(dataset = smallDB,
+                          variable =  "WMN SHD =JOB OPP",
+                          yes_codes = c("4", "5"),
+                          no_codes = c("1", "2", "3"),
+                          title = "A woman should have exactly the same job opportunities as a man - 12th grade, 'Mostly Agree' + 'Agree'")
+
+plot_prevalence_over_time(dataset = smallDB,
+                          variable =  "GOVT DEAL ENV PR",
+                          yes_codes = c("4", "5"),
+                          no_codes = c("1", "2", "3"),
+                          title = "Government should take steps to deal with our environmental problems, even if it means that most of us pay higher prices or taxes - 12th grade, 'Mostly Agree' + 'Agree'")
+```
+
