@@ -4,7 +4,7 @@ output: github_document
 ---
 My goal here is to combine code from different places for a proof-of-concept: to see whether I can quickly go from raw MTF data to a visualisation of a time trend for a given variable. To start off with, a couple limitations will be:
 
-* Only using variables included in grade 12, file 1
+* Only using variables included in grade 12, files 1 and 4
 * Only looking at one variable over time, with everyone's responses
 * I'm not doing any checks, tests, or validation of anything (so don't rely on any of the information from this!)
 
@@ -78,7 +78,9 @@ Here are the numbers from the [NIH website](https://www.drugabuse.gov/drug-topic
 ![Table](MTF-trends-from-NIH.png)
 
 
-# PALLAVI TEST
+# Testing some stuff for Pallavi
+
+Warning: the axes get automatically adjusted, so things that look like "trends" might just be essentially straight lines.
 ```{r, message = FALSE}
 grade12_file1_mapping = tibble()
 
@@ -121,10 +123,8 @@ plot_prevalence_over_time(dataset = smallDB,
 ```
 
 
-Next step: getting longer time trends for some of the social/gender questions I'm interested in:
+# Longer time trends for some of social/gender questions
 ```{r, eval = FALSE}
-#what needs to change?
-#some functions presume file 1
 #need to figure out regex for new files
 
 grade12_file4_mapping = tibble()

@@ -67,6 +67,11 @@ create_standard_helpful_name = function(unedited_name = unedited_name) {
   # at some point, sampling weight switched to archive weight 
   helpful_name = str_replace(helpful_name, "ARCHIVE WEIGHT", "SAMPLING WEIGHT")
   
+  
+  # FILE 4 / FORM 3 SPECIFIC STUFF
+  helpful_name = str_replace(helpful_name, "GD JB COLLG ?[\\+|&|/] ?UNIV", "GD JB COLLG&UNIV")
+  helpful_name = str_replace(helpful_name, "GD JB PRES ?[\\+|&|/] ?ADMIN", "GD JB PRES&ADMIN")
+  
   # trim whitespace off of either end
   helpful_name = str_trim(helpful_name)
   
