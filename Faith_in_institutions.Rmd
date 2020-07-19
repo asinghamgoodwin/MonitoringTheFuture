@@ -26,7 +26,44 @@ See the code along with brief explanations in [the other markdown doc](LINK).
 
 Set up the code by creating a smaller database that includes only the "faith in institutions" questions and demographic markers that I might later sort by.
 
-```{r, eval = FALSE}
+```{r}
+demographics = c("R'S ID-SERIAL #",
+                 "SAMPLING WEIGHT",
+                 "R'S SEX",
+                 "R'S POLTL PRFNC",
+                 "R'S RACE",
+                 "R'S RACE B/W/H"
+                 )
+
+institutions = c("GD JB PRES&ADMIN",
+                 "GD JB CONGRESS",
+                 "GD JB SUPRM CRT",
+                 "GD JB JUSTC SYST",
+                 "GD JB POLICE",
+                 "GD JB MILITARY",
+                 "GD JB PBLC SCHOL",
+                 "GD JB COLLG&UNIV",
+                 "GD JB CHURCHES",
+                 "GD JB NEWS MEDIA",
+                 "GD JB LARG CORPS",
+                 "GD JB LBR UNIONS")
+
+institution_labels = c("The President and his administration",
+                       "Congress",
+                       "The U.S. Supreme Court",
+                       "All the courts and the justice system in general",
+                       "The police and other law enforcement agencies",
+                       "The U.S. military",
+                       "The nation's public schools",
+                       "The nation's colleges and universities",
+                       "Churches and religious organizations",
+                       "The national news media",
+                       "Large corporations",
+                       "Major labor unions")
+
+```
+
+``` {r}
 grade12_file4_mapping = tibble()
 
 for (year in 1990:2018) {
@@ -37,32 +74,44 @@ for (year in 1990:2018) {
                                 )
   )
 }
+```
 
+```{r}
 smallDB = get_specific_data_by_years(path = "~/Documents/Code/MTF/MTFData/12th_grade/",
                                      file_number = 4,
                                      years = 1990:2018,
                                      mapping = grade12_file4_mapping,
-                                     variables_to_include = c("R'S ID-SERIAL #",
-                                                             "SAMPLING WEIGHT",
-                                                             "R'S SEX",
-                                                             ))
-
-plot_prevalence_over_time(dataset = smallDB,
-                          variable = "MN=ACHV/WMN=HOME",
-                          yes_codes = c("4", "5"),
-                          no_codes = c("1", "2", "3"),
-                          title = "It is usually better for everyone involved if the man is the achiever outside the home and the woman takes care of the home and family - 12th grade, 'Mostly Agree' + 'Agree'")
-
-plot_prevalence_over_time(dataset = smallDB,
-                          variable =  "WMN SHD =JOB OPP",
-                          yes_codes = c("4", "5"),
-                          no_codes = c("1", "2", "3"),
-                          title = "A woman should have exactly the same job opportunities as a man - 12th grade, 'Mostly Agree' + 'Agree'")
-
-plot_prevalence_over_time(dataset = smallDB,
-                          variable =  "GOVT DEAL ENV PR",
-                          yes_codes = c("4", "5"),
-                          no_codes = c("1", "2", "3"),
-                          title = "Government should take steps to deal with our environmental problems, even if it means that most of us pay higher prices or taxes - 12th grade, 'Mostly Agree' + 'Agree'")
+                                     variables_to_include = c(demographics, institutions)
+                                     )
 ```
+
+# How good or bad a job is being done for the country as a whole by . . .
+
+(Graphs are of the percentage of respondents who said "fair", "good", or "very good" out of everyone who responded. The other answer choices were "poor" and "very poor".)
+``` {r}
+require(gridExtra)
+
+plots = c()
+for (i in 1:3) { #length(institutions)) {
+  plots = c(plots, plot_prevalence_over_time(dataset = smallDB,
+                            variable = institutions[i],
+                            yes_codes = c("3", "4", "5"),
+                            no_codes = c("1", "2"),
+                            title = institution_labels[i]
+                            )
+  )
+}
+
+plots
+
+grid.arrange(plots[1], plots[2], nrow=1)
+```
+
+Next steps:
+
+* Graph by demographic or other factors
+* Output multiple plots
+* Tile the plots
+* Adjust axes
+* Dichotomize differently?
 

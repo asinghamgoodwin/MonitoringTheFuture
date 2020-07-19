@@ -71,6 +71,7 @@ create_standard_helpful_name = function(unedited_name = unedited_name) {
   # FILE 4 / FORM 3 SPECIFIC STUFF
   helpful_name = str_replace(helpful_name, "GD JB COLLG ?[\\+|&|/] ?UNIV", "GD JB COLLG&UNIV")
   helpful_name = str_replace(helpful_name, "GD JB PRES ?[\\+|&|/] ?ADMIN", "GD JB PRES&ADMIN")
+  helpful_name = str_replace(helpful_name, "R'POL BLF RADCL", "R'S POL BLF RADCL")
   
   # trim whitespace off of either end
   helpful_name = str_trim(helpful_name)
