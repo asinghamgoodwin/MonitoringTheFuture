@@ -96,7 +96,7 @@ Re-work the plotting code to fit this use case. New things I want:
 * ~Custom set the axes to be fixed~
 * Split up responses by other variables, and show all of them in different colors on the plots
 
-``` {r new_plotting}
+``` {r plot_by_sex}
 library(tidyverse)
 
 plot_prevalence_over_time2_by_sex = function(dataset = dataset,
@@ -149,16 +149,93 @@ plot_prevalence_over_time2_by_sex = function(dataset = dataset,
 }
 ```
 
+``` {r plot_by_pol_pref}
+plot_prevalence_over_time2_by_pol_pref = function(dataset = dataset,
+                                     variable = variable,
+                                     yes_codes = yes_codes,
+                                     no_codes = no_codes,
+                                     title = title,
+                                     y_range = NA
+                                     ) {
+  
+  # get (weighted) counts by year for our variable of interest, split up by the codes designated in the input
+  counts = dataset %>% 
+    filter(., `R'S POLTL PRFNC` %in% 1:8) %>% 
+    mutate(`R'S POLTL PRFNC`=recode(`R'S POLTL PRFNC`,
+                                    `1`='Republican',
+                                    `2`='Republican',
+                                    `3`='Democrat',
+                                    `4`='Democrat',
+                                    `5`='Independent',
+                                    `6`='No pref/IDK/other',
+                                    `7`='No pref/IDK/other',
+                                    `8`='No pref/IDK/other',
+                                    )) %>% 
+    mutate(.,
+           matches_criteria = 
+             case_when(!!sym(variable) %in% yes_codes ~ "yes",
+                       !!sym(variable) %in% no_codes ~ "no",
+                       TRUE ~ "leave out")
+    ) %>% 
+    group_by(., year, `R'S POLTL PRFNC`) %>% 
+    count(., matches_criteria, wt = `SAMPLING WEIGHT`)
+  
+  # get the "percent yes" for each year/grade group.
+  # the pivot_wider gets us a DB where each row represents one year, and has columns for yes, no, leave out, and then our calculated percent_yes 
+  percent_yes_db = counts %>%
+    pivot_wider(., names_from = matches_criteria, values_from = n) %>%
+    mutate(.,
+           percent_yes = (yes / (yes + no))*100
+    ) %>%
+    select(., year, percent_yes, `R'S POLTL PRFNC`) %>%
+    ungroup(.)
+  
+  plot = ggplot(percent_yes_db,
+                aes(x = year, y = percent_yes, group = `R'S POLTL PRFNC`, color = `R'S POLTL PRFNC`)
+  ) +
+    geom_line() +
+    geom_point() +
+    labs(
+      title = title,
+      x = "Year",
+      y = "Prevalence"
+    ) +
+    geom_text(label = round(percent_yes_db$percent_yes, 1), nudge_x = 0, nudge_y = .3)
+  
+  if (!is.na(y_range)) {
+    plot = plot + scale_y_continuous(limits = c(y_range[1], y_range[2]))
+  }
+  return(plot)
+}
+```
+
 
 # How good or bad a job is being done for the country as a whole by . . .
 
 (Graphs are of the percentage of respondents who said "fair", "good", or "very good" out of everyone who responded. The other answer choices were "poor" and "very poor".)
-``` {r}
-require(gridExtra)
-require(patchwork)
+
+## Split up by sex
+``` {r sex_plots, warning = FALSE, message = FALSE}
+#require(gridExtra)
+#require(patchwork)
 
 for (i in 1:length(institutions)) {
    print(plot_prevalence_over_time2_by_sex(dataset = smallDB,
+                             variable = institutions[i],
+                             yes_codes = c("3", "4", "5"),
+                             no_codes = c("1", "2"),
+                             title = institution_labels[i],
+                             y_range = c(40, 100)
+                             )
+  )
+}
+```
+
+## Split up by political preference
+
+``` {r pol_pref_plots, warning = FALSE, message = FALSE}
+for (i in 1:length(institutions)) {
+   print(plot_prevalence_over_time2_by_pol_pref(dataset = smallDB,
                              variable = institutions[i],
                              yes_codes = c("3", "4", "5"),
                              no_codes = c("1", "2"),
@@ -177,3 +254,14 @@ Next steps:
 * Adjust axes
 * Dichotomize differently?
 
+# General observations
+
+1. Boys consistently have just a little less faith in institutions than girls
+2. Trends in faith in institutions are relatively consistent across political preference, *except* for president, and a very recent divergence in police/law enforcement
+3. All faith in all institutions is going down (even if just a little)
+
+
+# Other ways that could be interesting to look at it
+
+1. Does faith in one institution correlate with faith (or lack thereof) in another? That is, if you believe in large corporations, are you less likely to believe in labor unions? Or are people more generally either trusting or not?
+2. I'm curious how all of these translate to faith in medical establishments, doctors, vaccines, medical advice, public health messaging, etc. (especially in light of COVID-19). Is there a way to get that info from MTF?

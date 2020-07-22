@@ -141,32 +141,78 @@ plot_prevalence_over_time2_by_sex = function(dataset = dataset,
 }
 ```
 
+``` r
+plot_prevalence_over_time2_by_pol_pref = function(dataset = dataset,
+                                     variable = variable,
+                                     yes_codes = yes_codes,
+                                     no_codes = no_codes,
+                                     title = title,
+                                     y_range = NA
+                                     ) {
+  
+  # get (weighted) counts by year for our variable of interest, split up by the codes designated in the input
+  counts = dataset %>% 
+    filter(., `R'S POLTL PRFNC` %in% 1:8) %>% 
+    mutate(`R'S POLTL PRFNC`=recode(`R'S POLTL PRFNC`,
+                                    `1`='Republican',
+                                    `2`='Republican',
+                                    `3`='Democrat',
+                                    `4`='Democrat',
+                                    `5`='Independent',
+                                    `6`='No pref/IDK/other',
+                                    `7`='No pref/IDK/other',
+                                    `8`='No pref/IDK/other',
+                                    )) %>% 
+    mutate(.,
+           matches_criteria = 
+             case_when(!!sym(variable) %in% yes_codes ~ "yes",
+                       !!sym(variable) %in% no_codes ~ "no",
+                       TRUE ~ "leave out")
+    ) %>% 
+    group_by(., year, `R'S POLTL PRFNC`) %>% 
+    count(., matches_criteria, wt = `SAMPLING WEIGHT`)
+  
+  # get the "percent yes" for each year/grade group.
+  # the pivot_wider gets us a DB where each row represents one year, and has columns for yes, no, leave out, and then our calculated percent_yes 
+  percent_yes_db = counts %>%
+    pivot_wider(., names_from = matches_criteria, values_from = n) %>%
+    mutate(.,
+           percent_yes = (yes / (yes + no))*100
+    ) %>%
+    select(., year, percent_yes, `R'S POLTL PRFNC`) %>%
+    ungroup(.)
+  
+  plot = ggplot(percent_yes_db,
+                aes(x = year, y = percent_yes, group = `R'S POLTL PRFNC`, color = `R'S POLTL PRFNC`)
+  ) +
+    geom_line() +
+    geom_point() +
+    labs(
+      title = title,
+      x = "Year",
+      y = "Prevalence"
+    ) +
+    geom_text(label = round(percent_yes_db$percent_yes, 1), nudge_x = 0, nudge_y = .3)
+  
+  if (!is.na(y_range)) {
+    plot = plot + scale_y_continuous(limits = c(y_range[1], y_range[2]))
+  }
+  return(plot)
+}
+```
+
 # How good or bad a job is being done for the country as a whole by . . .
 
 (Graphs are of the percentage of respondents who said “fair”, “good”, or
 “very good” out of everyone who responded. The other answer choices were
 “poor” and “very poor”.)
 
-``` r
-require(gridExtra)
-```
-
-    ## Loading required package: gridExtra
-
-    ## 
-    ## Attaching package: 'gridExtra'
-
-    ## The following object is masked from 'package:dplyr':
-    ## 
-    ##     combine
+## Split up by sex
 
 ``` r
-require(patchwork)
-```
+#require(gridExtra)
+#require(patchwork)
 
-    ## Loading required package: patchwork
-
-``` r
 for (i in 1:length(institutions)) {
    print(plot_prevalence_over_time2_by_sex(dataset = smallDB,
                              variable = institutions[i],
@@ -179,69 +225,24 @@ for (i in 1:length(institutions)) {
 }
 ```
 
-    ## Warning in if (!is.na(y_range)) {: the condition has length > 1 and only the
-    ## first element will be used
+<img src="Faith_in_institutions_files/figure-gfm/sex_plots-1.png" width="90%" /><img src="Faith_in_institutions_files/figure-gfm/sex_plots-2.png" width="90%" /><img src="Faith_in_institutions_files/figure-gfm/sex_plots-3.png" width="90%" /><img src="Faith_in_institutions_files/figure-gfm/sex_plots-4.png" width="90%" /><img src="Faith_in_institutions_files/figure-gfm/sex_plots-5.png" width="90%" /><img src="Faith_in_institutions_files/figure-gfm/sex_plots-6.png" width="90%" /><img src="Faith_in_institutions_files/figure-gfm/sex_plots-7.png" width="90%" /><img src="Faith_in_institutions_files/figure-gfm/sex_plots-8.png" width="90%" /><img src="Faith_in_institutions_files/figure-gfm/sex_plots-9.png" width="90%" /><img src="Faith_in_institutions_files/figure-gfm/sex_plots-10.png" width="90%" /><img src="Faith_in_institutions_files/figure-gfm/sex_plots-11.png" width="90%" /><img src="Faith_in_institutions_files/figure-gfm/sex_plots-12.png" width="90%" />
 
-    ## Warning: Removed 2 rows containing missing values (geom_path).
+## Split up by political preference
 
-    ## Warning: Removed 2 rows containing missing values (geom_point).
+``` r
+for (i in 1:length(institutions)) {
+   print(plot_prevalence_over_time2_by_pol_pref(dataset = smallDB,
+                             variable = institutions[i],
+                             yes_codes = c("3", "4", "5"),
+                             no_codes = c("1", "2"),
+                             title = institution_labels[i],
+                             y_range = c(40, 100)
+                             )
+  )
+}
+```
 
-    ## Warning: Removed 2 rows containing missing values (geom_text).
-
-    ## Warning in if (!is.na(y_range)) {: the condition has length > 1 and only the
-    ## first element will be used
-
-<img src="Faith_in_institutions_files/figure-gfm/unnamed-chunk-6-1.png" width="90%" />
-
-    ## Warning in if (!is.na(y_range)) {: the condition has length > 1 and only the
-    ## first element will be used
-
-<img src="Faith_in_institutions_files/figure-gfm/unnamed-chunk-6-2.png" width="90%" />
-
-    ## Warning in if (!is.na(y_range)) {: the condition has length > 1 and only the
-    ## first element will be used
-
-<img src="Faith_in_institutions_files/figure-gfm/unnamed-chunk-6-3.png" width="90%" />
-
-    ## Warning in if (!is.na(y_range)) {: the condition has length > 1 and only the
-    ## first element will be used
-
-<img src="Faith_in_institutions_files/figure-gfm/unnamed-chunk-6-4.png" width="90%" />
-
-    ## Warning in if (!is.na(y_range)) {: the condition has length > 1 and only the
-    ## first element will be used
-
-<img src="Faith_in_institutions_files/figure-gfm/unnamed-chunk-6-5.png" width="90%" />
-
-    ## Warning in if (!is.na(y_range)) {: the condition has length > 1 and only the
-    ## first element will be used
-
-<img src="Faith_in_institutions_files/figure-gfm/unnamed-chunk-6-6.png" width="90%" />
-
-    ## Warning in if (!is.na(y_range)) {: the condition has length > 1 and only the
-    ## first element will be used
-
-<img src="Faith_in_institutions_files/figure-gfm/unnamed-chunk-6-7.png" width="90%" />
-
-    ## Warning in if (!is.na(y_range)) {: the condition has length > 1 and only the
-    ## first element will be used
-
-<img src="Faith_in_institutions_files/figure-gfm/unnamed-chunk-6-8.png" width="90%" />
-
-    ## Warning in if (!is.na(y_range)) {: the condition has length > 1 and only the
-    ## first element will be used
-
-<img src="Faith_in_institutions_files/figure-gfm/unnamed-chunk-6-9.png" width="90%" />
-
-    ## Warning in if (!is.na(y_range)) {: the condition has length > 1 and only the
-    ## first element will be used
-
-<img src="Faith_in_institutions_files/figure-gfm/unnamed-chunk-6-10.png" width="90%" />
-
-    ## Warning in if (!is.na(y_range)) {: the condition has length > 1 and only the
-    ## first element will be used
-
-<img src="Faith_in_institutions_files/figure-gfm/unnamed-chunk-6-11.png" width="90%" /><img src="Faith_in_institutions_files/figure-gfm/unnamed-chunk-6-12.png" width="90%" />
+<img src="Faith_in_institutions_files/figure-gfm/pol_pref_plots-1.png" width="90%" /><img src="Faith_in_institutions_files/figure-gfm/pol_pref_plots-2.png" width="90%" /><img src="Faith_in_institutions_files/figure-gfm/pol_pref_plots-3.png" width="90%" /><img src="Faith_in_institutions_files/figure-gfm/pol_pref_plots-4.png" width="90%" /><img src="Faith_in_institutions_files/figure-gfm/pol_pref_plots-5.png" width="90%" /><img src="Faith_in_institutions_files/figure-gfm/pol_pref_plots-6.png" width="90%" /><img src="Faith_in_institutions_files/figure-gfm/pol_pref_plots-7.png" width="90%" /><img src="Faith_in_institutions_files/figure-gfm/pol_pref_plots-8.png" width="90%" /><img src="Faith_in_institutions_files/figure-gfm/pol_pref_plots-9.png" width="90%" /><img src="Faith_in_institutions_files/figure-gfm/pol_pref_plots-10.png" width="90%" /><img src="Faith_in_institutions_files/figure-gfm/pol_pref_plots-11.png" width="90%" /><img src="Faith_in_institutions_files/figure-gfm/pol_pref_plots-12.png" width="90%" />
 
 Next steps:
 
@@ -250,3 +251,23 @@ Next steps:
   - Tile the plots
   - Adjust axes
   - Dichotomize differently?
+
+# General observations
+
+1.  Boys consistently have just a little less faith in institutions than
+    girls
+2.  Trends in faith in institutions are relatively consistent across
+    political preference, *except* for president, and a very recent
+    divergence in police/law enforcement
+3.  All faith in all institutions is going down (even if just a little)
+
+# Other ways that could be interesting to look at it
+
+1.  Does faith in one institution correlate with faith (or lack thereof)
+    in another? That is, if you believe in large corporations, are you
+    less likely to believe in labor unions? Or are people more generally
+    either trusting or not?
+2.  I’m curious how all of these translate to faith in medical
+    establishments, doctors, vaccines, medical advice, public health
+    messaging, etc. (especially in light of COVID-19). Is there a way to
+    get that info from MTF?
