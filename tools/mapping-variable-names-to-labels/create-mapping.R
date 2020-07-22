@@ -1,5 +1,3 @@
-#source("tools/mapping-variable-names-to-labels/create-standard-helpful-name.R")
-
 create_standard_helpful_name = function(unedited_name = unedited_name) {
   # everything to uppercase
   helpful_name = str_to_upper(unedited_name)

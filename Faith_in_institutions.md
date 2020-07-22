@@ -1,36 +1,22 @@
----
-title: "Faith in institutions over time"
-output: github_document
----
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(
-  echo = TRUE,
-  fig.width = 6,
-  fig.asp = .6,
-  out.width = "90%"
-)
-library(tidyverse)
-require(haven)
-require(stringr)
-```
+Faith in institutions over time
+================
 
 # Helper Code
 
-See the code along with brief explanations in [the other markdown doc](LINK).
+See the code along with brief explanations in [the other markdown
+doc](LINK).
 
-```{r code=xfun::read_utf8('tools/mapping-variable-names-to-labels/create-mapping.R'), include=FALSE}
-```
-
-```{r code=xfun::read_utf8('tools/creating-datasets/get-specific-data-by-years.R'), include=FALSE}
-```
-
-Take this out, so I can instead modify the plotting code later on: `{r code=xfun::read_utf8('tools/visualization/plot-prevalence-over-time.R'), include=FALSE}`
+Take this out, so I can instead modify the plotting code later on: `{r
+code=xfun::read_utf8('tools/visualization/plot-prevalence-over-time.R'),
+include=FALSE}`
 
 # Trends over time: faith in institutions
 
-Set up the code by creating a smaller database that includes only the "faith in institutions" questions and demographic markers that I might later sort by.
+Set up the code by creating a smaller database that includes only the
+“faith in institutions” questions and demographic markers that I might
+later sort by.
 
-```{r}
+``` r
 demographics = c("R'S ID-SERIAL #",
                  "SAMPLING WEIGHT",
                  "R'S SEX",
@@ -64,10 +50,9 @@ institution_labels = c("The President and his administration",
                        "The national news media",
                        "Large corporations",
                        "Major labor unions")
-
 ```
 
-``` {r}
+``` r
 grade12_file4_mapping = tibble()
 
 for (year in 1990:2018) {
@@ -80,7 +65,7 @@ for (year in 1990:2018) {
 }
 ```
 
-```{r}
+``` r
 smallDB = get_specific_data_by_years(path = "~/Documents/Code/MTF/MTFData/12th_grade/",
                                      file_number = 4,
                                      years = 1990:2018,
@@ -91,12 +76,19 @@ smallDB = get_specific_data_by_years(path = "~/Documents/Code/MTF/MTFData/12th_g
 
 Re-work the plotting code to fit this use case. New things I want:
 
-* ~I'd like to be able to call this function iteratively (for some reasosn it didn't work to make multiple plots within a for loop)~ *--> from inside a for loop, I need to call `print()` for the plot*
-* Tile the graphs so we can see all 12 at once, big enough to be useful
-* ~Custom set the axes to be fixed~
-* Split up responses by other variables, and show all of them in different colors on the plots
+  - ~I’d like to be able to call this function iteratively (for some
+    reasosn it didn’t work to make multiple plots within a for loop)~
+    *–\> from inside a for loop, I need to call `print()` for the
+    plot*
+  - Tile the graphs so we can see all 12 at once, big enough to be
+    useful
+  - ~Custom set the axes to be fixed~
+  - Split up responses by other variables, and show all of them in
+    different colors on the plots
 
-``` {r new_plotting}
+<!-- end list -->
+
+``` r
 library(tidyverse)
 
 plot_prevalence_over_time2_by_sex = function(dataset = dataset,
@@ -149,14 +141,32 @@ plot_prevalence_over_time2_by_sex = function(dataset = dataset,
 }
 ```
 
-
 # How good or bad a job is being done for the country as a whole by . . .
 
-(Graphs are of the percentage of respondents who said "fair", "good", or "very good" out of everyone who responded. The other answer choices were "poor" and "very poor".)
-``` {r}
-require(gridExtra)
-require(patchwork)
+(Graphs are of the percentage of respondents who said “fair”, “good”, or
+“very good” out of everyone who responded. The other answer choices were
+“poor” and “very poor”.)
 
+``` r
+require(gridExtra)
+```
+
+    ## Loading required package: gridExtra
+
+    ## 
+    ## Attaching package: 'gridExtra'
+
+    ## The following object is masked from 'package:dplyr':
+    ## 
+    ##     combine
+
+``` r
+require(patchwork)
+```
+
+    ## Loading required package: patchwork
+
+``` r
 for (i in 1:length(institutions)) {
    print(plot_prevalence_over_time2_by_sex(dataset = smallDB,
                              variable = institutions[i],
@@ -169,11 +179,74 @@ for (i in 1:length(institutions)) {
 }
 ```
 
+    ## Warning in if (!is.na(y_range)) {: the condition has length > 1 and only the
+    ## first element will be used
+
+    ## Warning: Removed 2 rows containing missing values (geom_path).
+
+    ## Warning: Removed 2 rows containing missing values (geom_point).
+
+    ## Warning: Removed 2 rows containing missing values (geom_text).
+
+    ## Warning in if (!is.na(y_range)) {: the condition has length > 1 and only the
+    ## first element will be used
+
+<img src="Faith_in_institutions_files/figure-gfm/unnamed-chunk-6-1.png" width="90%" />
+
+    ## Warning in if (!is.na(y_range)) {: the condition has length > 1 and only the
+    ## first element will be used
+
+<img src="Faith_in_institutions_files/figure-gfm/unnamed-chunk-6-2.png" width="90%" />
+
+    ## Warning in if (!is.na(y_range)) {: the condition has length > 1 and only the
+    ## first element will be used
+
+<img src="Faith_in_institutions_files/figure-gfm/unnamed-chunk-6-3.png" width="90%" />
+
+    ## Warning in if (!is.na(y_range)) {: the condition has length > 1 and only the
+    ## first element will be used
+
+<img src="Faith_in_institutions_files/figure-gfm/unnamed-chunk-6-4.png" width="90%" />
+
+    ## Warning in if (!is.na(y_range)) {: the condition has length > 1 and only the
+    ## first element will be used
+
+<img src="Faith_in_institutions_files/figure-gfm/unnamed-chunk-6-5.png" width="90%" />
+
+    ## Warning in if (!is.na(y_range)) {: the condition has length > 1 and only the
+    ## first element will be used
+
+<img src="Faith_in_institutions_files/figure-gfm/unnamed-chunk-6-6.png" width="90%" />
+
+    ## Warning in if (!is.na(y_range)) {: the condition has length > 1 and only the
+    ## first element will be used
+
+<img src="Faith_in_institutions_files/figure-gfm/unnamed-chunk-6-7.png" width="90%" />
+
+    ## Warning in if (!is.na(y_range)) {: the condition has length > 1 and only the
+    ## first element will be used
+
+<img src="Faith_in_institutions_files/figure-gfm/unnamed-chunk-6-8.png" width="90%" />
+
+    ## Warning in if (!is.na(y_range)) {: the condition has length > 1 and only the
+    ## first element will be used
+
+<img src="Faith_in_institutions_files/figure-gfm/unnamed-chunk-6-9.png" width="90%" />
+
+    ## Warning in if (!is.na(y_range)) {: the condition has length > 1 and only the
+    ## first element will be used
+
+<img src="Faith_in_institutions_files/figure-gfm/unnamed-chunk-6-10.png" width="90%" />
+
+    ## Warning in if (!is.na(y_range)) {: the condition has length > 1 and only the
+    ## first element will be used
+
+<img src="Faith_in_institutions_files/figure-gfm/unnamed-chunk-6-11.png" width="90%" /><img src="Faith_in_institutions_files/figure-gfm/unnamed-chunk-6-12.png" width="90%" />
+
 Next steps:
 
-* Graph by demographic or other factors
-* Output multiple plots
-* Tile the plots
-* Adjust axes
-* Dichotomize differently?
-
+  - Graph by demographic or other factors
+  - Output multiple plots
+  - Tile the plots
+  - Adjust axes
+  - Dichotomize differently?
