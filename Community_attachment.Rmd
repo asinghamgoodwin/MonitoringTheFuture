@@ -58,7 +58,7 @@ Create a standardized list of names for variables across years.
 grade12_file1_mapping = tibble()
 grade12_file2_mapping = tibble()
 
-for (year in all_years) {
+for (year in new_years) {
   grade12_file1_mapping = rbind(grade12_file1_mapping,
                                 create_mapping(path = "~/Documents/Code/MTF/MTFData/12th_grade/",
                                                year = year,
@@ -83,11 +83,17 @@ demographics = c(`R'S ID-SERIAL #`,
                  `SAMPLING WEIGHT`,
                  `R'S SEX`,
                  `R'S RACE`,
-                 `R'S RACE B/W/H`
+                 `R'S RACE B/W/H`,
+                 `FATHR EDUC LEVEL`,
+                 `MOTHR EDUC LEVEL`,
+                 ``,
+                 ``,
+                 ``,
+                 ``,
+                 ``
                  )
                  # $$HIGHSCHOOLGRADES$?$,
                  # $$GRADUATIONLIKELIHOOD$2$,
-                 # $$PARENTSES$2$,
                  # $$COLLEGEASPIRATIONS$?$
                  # )
 
@@ -101,10 +107,8 @@ social_responsibility = c(`IMP CNTRBTN SOC`,
                           `IMP CRRCT INEQL`
                           )
 
-religiosity = c()
-                # $$FREQUENCY$$,
-                # $$IMPORTANCE$$
-                # )
+religiosity = c(`R'ATTND REL SVC`,
+                `RLGN IMP R'S LF`)
 
 community_attachment = c(social_trust,
                          social_responsibility,
@@ -166,3 +170,7 @@ At minimum:
 # TODO: write code, look up from old MTF SAS file
 ```
 
+# Random questions and notes for later:
+
+* Is religiosity driving the whole community attachment indicator?
+* Somewhere, data from before 1990 is formatted differently (names of columns), so I need to incorporate that into my code.
