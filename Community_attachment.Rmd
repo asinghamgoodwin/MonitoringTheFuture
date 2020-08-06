@@ -32,7 +32,7 @@ Some random thoughts and new directions I have in mind for potential next steps:
 
 # Code setup
 
-## Step 0. Prepare helper functions, constants, etc.
+## Step 0. Import helper functions, define constants, etc.
 
 Luckily, everything in the base set of community attachment measures, substance use, and most covariates are asked in form 1 (file 2). I'll also need to pull some basic demographics from the core form (file 1).
 
@@ -42,17 +42,14 @@ old_years = 1976:2008
 new_years = 2009:2018
 ```
 
-
-```{r create_mapping_import}
+These two helper functions come from separate R scripts.
+```{r create_mapping_import, include=FALSE}
 source('tools/mapping-variable-names-to-labels/create-mapping.R', local = knitr::knit_global())
 ```
-
-#code=xfun::read_utf8('tools/mapping-variable-names-to-labels/create-mapping.R'), include=FALSE}
 
 ```{r get_specific_data_by_years_export, include=FALSE}
 source('tools/creating-datasets/get-specific-data-by-years.R', local = knitr::knit_global())
 ```
-#code=xfun::read_utf8('tools/creating-datasets/get-specific-data-by-years.R'), include=FALSE}
 
 Create a standardized list of names for variables across years.
 
@@ -80,10 +77,12 @@ for (year in new_years) {
 ```
 
 
-## Step 1: Creating a smaller database that includes only the variables I need
+## Step 1: Create a smaller database that includes only the variables I need
 
-First, define the list of variables we want. These are from the original paper:
+First, define the list of variables we want. The original paper includes demographics (covariates), measures of community attachment, and substance use.
 
+<details>
+<summary>Click to see all the variable names from the original paper.</summary>
 ```{r base_variable_lists}
 demographics = c("R'S ID-SERIAL #",
                  "SAMPLING WEIGHT",
@@ -148,18 +147,22 @@ substance_use = c("EVR SMK CIG,REGL",
 # Other illicit drugs -- 
 #    hallucinogens: include LSD & hall. other than LSD -- include MDMA? (I think no)
 ```
+</details>
 
-These are new variables I'm potentially interested in:
+I'm potentially interested in a handful more variables, such as *X, Y, Z*.
+
+<details>
+<summary>Click to see the variable names that I'm adding in.</summary>
 ```{r new_variable_lists}
 # TODO - fill in later. Make sure the variables are from the same forms or can somehow be compared against what we're already searching for...
 ```
+</details>
 
 Get data from all participants for each of the variables above. Merge/combine by ID number and year.
 
-*TODO: probably worth making/modifying a helper function so that the merges can be automatic.*
-
 Notes:
 
+* *TODO: probably worth making/modifying a helper function so that the merges can be automatic.*
 * Although many of the variables in `demographics`, `substance_use`, and `community_attachment` can be found in file 1 and file 2, the variables names are cleaner for substance use in file 1, so I've decided to get all deomgraphics and substance use info from file 1, all community attachment info from file 2, and combine on ID number.
 ```{r}
 # TODO: add in from new_variable_lists once I get there
@@ -182,11 +185,17 @@ raw_data_file2 = get_specific_data_by_years(path = "~/Documents/Code/MTF/MTFData
                                      )
 
 ```
+</details>
+
 
 ```{r}
 raw_data_combined = inner_join(raw_data_file1, raw_data_file2, by = c("R'S ID-SERIAL #", "year"))
+
+knitr::kable(head(raw_data_combined))
+summary(raw_data_combined)
 ```
 
+*NOTE: Check in on the values here... there's a lot more missing data (`-9`) than I expected! Also, it would probably be helpful to recode `-9` as `NA` so I could take advantage of R's built-in understandings of missing data.*
 
 ## Step 2: Recode, create indicators/aggregate values, etc.
 
