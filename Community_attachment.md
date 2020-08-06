@@ -1,65 +1,60 @@
----
-title: "Community Attachment"
-output: github_document
----
+Community Attachment
+================
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(
-  echo = TRUE,
-  fig.width = 6,
-  fig.asp = .6,
-  out.width = "90%"
-)
-library(tidyverse)
-require(haven)
-require(stringr)
-```
+Using the paper [Associations between Community Attachments and
+Adolescent Substance Use in Nationally Representative
+Samples](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3699306/) as a
+reference, I’m trying to replicate the original results (1976-2008), and
+then see how community attachment relates to substance use in the period
+from 2009-2018.
 
-Using the paper [Associations between Community Attachments and Adolescent Substance Use in Nationally Representative Samples](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3699306/) as a reference, I'm trying to replicate the original results (1976-2008), and then see how community attachment relates to substance use in the period from 2009-2018.
+Some random thoughts and new directions I have in mind for potential
+next steps:
 
-Some random thoughts and new directions I have in mind for potential next steps:
-
-* What's different about 2009-2018?
-  * Legalization of marijuana
-  * Opioid crisis
-  * Financial crisis
-  * Drug use in general going down, but marijuana staying constant
-* Other exposures/predictors to look at:
-  * Broader "society attachment" / faith in institutions (ex. do you think voting matters?)
-  * Community/society engagement (not just attachment) - things like having a job, drivers license, community service
-  * Deeper dive into gender differences?
-* Another outcome: Mental health (internalizing/externalizing)?
+  - What’s different about 2009-2018?
+      - Legalization of marijuana
+      - Opioid crisis
+      - Financial crisis
+      - Drug use in general going down, but marijuana staying constant
+  - Other exposures/predictors to look at:
+      - Broader “society attachment” / faith in institutions (ex. do you
+        think voting matters?)
+      - Community/society engagement (not just attachment) - things like
+        having a job, drivers license, community service
+      - Deeper dive into gender differences?
+  - Another outcome: Mental health (internalizing/externalizing)?
 
 # Code setup
 
 ## Step 0. Prepare helper functions, constants, etc.
 
-Luckily, everything in the base set of community attachment measures, substance use, and most covariates are asked in form 1 (file 2). I'll also need to pull some basic demographics from the core form (file 1).
+Luckily, everything in the base set of community attachment measures,
+substance use, and most covariates are asked in form 1 (file 2). I’ll
+also need to pull some basic demographics from the core form (file 1).
 
-```{r general_constants}
+``` r
 all_years = 1976:2018
 old_years = 1976:2008
 new_years = 2009:2018
 ```
 
-
-```{r create_mapping_import}
+``` r
 source('tools/mapping-variable-names-to-labels/create-mapping.R', local = knitr::knit_global())
 ```
 
-#code=xfun::read_utf8('tools/mapping-variable-names-to-labels/create-mapping.R'), include=FALSE}
+\#code=xfun::read\_utf8(‘tools/mapping-variable-names-to-labels/create-mapping.R’),
+include=FALSE}
 
-```{r get_specific_data_by_years_export, include=FALSE}
-source('tools/creating-datasets/get-specific-data-by-years.R', local = knitr::knit_global())
-```
-#code=xfun::read_utf8('tools/creating-datasets/get-specific-data-by-years.R'), include=FALSE}
+\#code=xfun::read\_utf8(‘tools/creating-datasets/get-specific-data-by-years.R’),
+include=FALSE}
 
 Create a standardized list of names for variables across years.
 
-*TODO - this shouldn't happen in this file.... once I've gotten a better handle on it I'd like to do this somewhere separate and have a definitive static file of standard names to reference.*
+*TODO - this shouldn’t happen in this file…. once I’ve gotten a better
+handle on it I’d like to do this somewhere separate and have a
+definitive static file of standard names to reference.*
 
-``` {r generate_mapping_files}
-
+``` r
 grade12_file1_mapping = tibble()
 grade12_file2_mapping = tibble()
 
@@ -79,12 +74,12 @@ for (year in new_years) {
 }
 ```
 
-
 ## Step 1: Creating a smaller database that includes only the variables I need
 
-First, define the list of variables we want. These are from the original paper:
+First, define the list of variables we want. These are from the original
+paper:
 
-```{r base_variable_lists}
+``` r
 demographics = c("R'S ID-SERIAL #",
                  "SAMPLING WEIGHT",
                  "R'S SEX",
@@ -149,19 +144,30 @@ substance_use = c("EVR SMK CIG,REGL",
 #    hallucinogens: include LSD & hall. other than LSD -- include MDMA? (I think no)
 ```
 
-These are new variables I'm potentially interested in:
-```{r new_variable_lists}
+These are new variables I’m potentially interested
+in:
+
+``` r
 # TODO - fill in later. Make sure the variables are from the same forms or can somehow be compared against what we're already searching for...
 ```
 
-Get data from all participants for each of the variables above. Merge/combine by ID number and year.
+Get data from all participants for each of the variables above.
+Merge/combine by ID number and year.
 
-*TODO: probably worth making/modifying a helper function so that the merges can be automatic.*
+*TODO: probably worth making/modifying a helper function so that the
+merges can be automatic.*
 
 Notes:
 
-* Although many of the variables in `demographics`, `substance_use`, and `community_attachment` can be found in file 1 and file 2, the variables names are cleaner for substance use in file 1, so I've decided to get all deomgraphics and substance use info from file 1, all community attachment info from file 2, and combine on ID number.
-```{r}
+  - Although many of the variables in `demographics`, `substance_use`,
+    and `community_attachment` can be found in file 1 and file 2, the
+    variables names are cleaner for substance use in file 1, so I’ve
+    decided to get all deomgraphics and substance use info from file 1,
+    all community attachment info from file 2, and combine on ID number.
+
+<!-- end list -->
+
+``` r
 # TODO: add in from new_variable_lists once I get there
 # TODO: switch from new_years to all_years once I've gotten the old data into good shape
 
@@ -180,30 +186,29 @@ raw_data_file2 = get_specific_data_by_years(path = "~/Documents/Code/MTF/MTFData
                                      variables_to_include = c("R'S ID-SERIAL #",
                                                               community_attachment)
                                      )
-
 ```
 
-```{r}
+``` r
 raw_data_combined = inner_join(raw_data_file1, raw_data_file2, by = c("R'S ID-SERIAL #", "year"))
 ```
 
-
 ## Step 2: Recode, create indicators/aggregate values, etc.
 
-At minimum:
-1. Create social trust score
-2. Create social responsibility score
-3. Create religiosity score
-4. Operationalize substance use (probably multiple different variables)
-5. Combine momEd and dadEd into SES
-6. Combine 2yr and 4yr college graduation expectations
-7. Create dummy variable for each year of the survey, to account for historical trends. (Note: in original paper they did this and then found the dummy variables to not be significant. But it's worth it for me to check, both for 2009-2018 and if I add in any new predictors or outcoems.)
+At minimum: 1. Create social trust score 2. Create social responsibility
+score 3. Create religiosity score 4. Operationalize substance use
+(probably multiple different variables) 5. Combine momEd and dadEd into
+SES 6. Combine 2yr and 4yr college graduation expectations 7. Create
+dummy variable for each year of the survey, to account for historical
+trends. (Note: in original paper they did this and then found the dummy
+variables to not be significant. But it’s worth it for me to check, both
+for 2009-2018 and if I add in any new predictors or outcoems.)
 
-```{r data_wrangling}
+``` r
 # TODO: write code, look up from old MTF SAS file
 ```
 
 # Random questions and notes for later:
 
-* Is religiosity driving the whole community attachment indicator?
-* Somewhere, data from before 1990 is formatted differently (names of columns), so I need to incorporate that into my code.
+  - Is religiosity driving the whole community attachment indicator?
+  - Somewhere, data from before 1990 is formatted differently (names of
+    columns), so I need to incorporate that into my code.
