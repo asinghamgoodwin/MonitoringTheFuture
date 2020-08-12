@@ -34,7 +34,7 @@ Some random thoughts and new directions I have in mind for potential next steps:
 
 ## Step 0. Import helper functions, define constants, etc.
 
-Luckily, everything in the base set of community attachment measures, substance use, and most covariates are asked in form 1 (file 2). I'll also need to pull some basic demographics from the core form (file 1).
+Luckily, everything in the base set of community attachment measures, substance use, and most control variables are asked in form 1 (file 2). I'll also need to pull some basic demographics from the core form (file 1).
 
 ```{r general_constants}
 all_years = 1976:2018
@@ -79,7 +79,7 @@ for (year in new_years) {
 
 ## Step 1: Create a smaller database that includes only the variables I need
 
-First, define the list of variables we want. The original paper includes demographics (covariates), measures of community attachment, and substance use.
+First, define the list of variables we want. The original paper includes demographics (control variables), measures of community attachment, and substance use.
 
 <details>
 <summary>Click to see all the variable names from the original paper.</summary>
@@ -87,7 +87,7 @@ First, define the list of variables we want. The original paper includes demogra
 demographics = c("R'S ID-SERIAL #",
                  "SAMPLING WEIGHT",
                  "R'S SEX",
-                 "R'S RACE",
+                 "R'S RACE", # Only for years before 2005
                  "R'S RACE B/W/H",
                  "FATHR EDUC LEVEL",
                  "MOTHR EDUC LEVEL",
@@ -191,11 +191,15 @@ raw_data_file2 = get_specific_data_by_years(path = "~/Documents/Code/MTF/MTFData
 ```{r}
 raw_data_combined = inner_join(raw_data_file1, raw_data_file2, by = c("R'S ID-SERIAL #", "year"))
 
-knitr::kable(head(raw_data_combined))
+knitr::kable(raw_data_combined[100:110,])
 summary(raw_data_combined)
 ```
 
-*NOTE: Check in on the values here... there's a lot more missing data (`-9`) than I expected! Also, it would probably be helpful to recode `-9` as `NA` so I could take advantage of R's built-in understandings of missing data.*
+NOTES:
+
+* Check in on the values here... there's a lot more missing data (`-9`) than I expected!
+* It would probably be helpful to recode `-9` as `NA` so I could take advantage of R's built-in understandings of missing data.
+* I'd love a more useful quick representation of the data than `summary()` provides (I'm imagining something like `proc freq` in SAS...)
 
 ## Step 2: Recode, create indicators/aggregate values, etc.
 
@@ -209,10 +213,62 @@ At minimum:
 7. Create dummy variable for each year of the survey, to account for historical trends. (Note: in original paper they did this and then found the dummy variables to not be significant. But it's worth it for me to check, both for 2009-2018 and if I add in any new predictors or outcoems.)
 
 ```{r data_wrangling}
-# TODO: write code, look up from old MTF SAS file
+recoded = raw_data_combined %>% 
+  na_if(., -9) %>% # This is how MTF codes missing values
+  na_if(., -8) %>% # This is how my code (and sometimes MTF) codes questions that weren't asked to a participant
+  
+  # Values we can use as-is without mutating:
+  rename(., `High school grades` = `R HS GRADE/D=1`
+         ) %>% 
+  
+  # For both of these, 7 meant "I don't know / doesn't apply" so I'm recoding those as missing
+  mutate(., `MOTHR EDUC LEVEL` = na_if(`MOTHR EDUC LEVEL`, 7),
+         `FATHR EDUC LEVEL` = na_if(`FATHR EDUC LEVEL`, 7)
+         ) %>% 
+  
+  # Recode and rename demographics/control variables
+  mutate(., Sex = as.factor(recode(`R'S SEX`,
+                                   `1` = 'Male',
+                                   `2` = 'Female')), # Male=1 Female=0
+         Race = as.factor(recode(`R'S RACE B/W/H`,
+                                 `1` = 'Black',
+                                 `2` = 'White',
+                                 `3` = 'Hispanic',
+                                 .missing = 'Other/missing')), # White=1, Black=0, others=missing
+         `College aspirations` = as.factor(case_when(
+           `R WL DO 4YR CLG` %in% c(3, 4) ~ '4-year college plans',
+           `R WL DO 2YR CLG` %in% c(3, 4) ~ '2-year college plans',
+           `R WL DO 2YR CLG` %in% c(1, 2) ~ 'No college plans')), # coded with dummy variables
+         `Parents' education` = 
+           as.factor(pmax(`MOTHR EDUC LEVEL`, `FATHR EDUC LEVEL`, na.rm = TRUE)) #NOTE - pmax does max comparissons element-by-element. if either value exists, return that instead of NA
+         ) %>% 
+  
+  # Create social trust score and social responsibility score
+  mutate(., `Social Trust` = rowMeans(cbind(`PPL CAN B TRSTD`, `PPL TRY B HLPFL`, `PPL TRY BE FAIR`), na.rm = TRUE),
+         `Social Trust - NO_MISSING` = rowMeans(cbind(`PPL CAN B TRSTD`, `PPL TRY B HLPFL`, `PPL TRY BE FAIR`)),
+         `Social Responsibility` = rowMeans(cbind(`IMP CNTRBTN SOC`, `IMP CRRCT INEQL`, `IMP LDR COMUNTY`), na.rm = TRUE),
+         `Social Responsibility - NO_MISSING` = rowMeans(cbind(`IMP CNTRBTN SOC`, `IMP CRRCT INEQL`, `IMP LDR COMUNTY`))
+         ) %>% 
+  
+  # Prep work and then create religiosity score
+  mutate(., rel1scaled = scale(`R'ATTND REL SVC`),
+         rel2scaled = scale(`RLGN IMP R'S LF`),
+         `Religiosity` = rowMeans(cbind(rel1scaled, rel2scaled), na.rm = TRUE),
+         `Religiosity - NO_MISSING` = rowMeans(cbind(rel1scaled, rel2scaled))
+         )
+
+summary(recoded)
+#library(Hmisc)
+#Hmisc::describe(recoded)
+#glimpse(recoded)
+# could do transmute to get rid of old columns! it only keeps the new ones you define
 ```
 
 # Random questions and notes for later:
 
 * Is religiosity driving the whole community attachment indicator?
 * Somewhere, data from before 1990 is formatted differently (names of columns), so I need to incorporate that into my code.
+* Should I remove anyone who has missing data for any question? That seems like a lot!
+* Do I need to code things as dummy variables, or does R have a way to do regression without?
+  * Related: should everything be factors?
+* When averaging things (like for social trust score) is it ok if you're missing one of the 3 things to average?
