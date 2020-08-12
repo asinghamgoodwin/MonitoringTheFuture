@@ -191,8 +191,8 @@ raw_data_file2 = get_specific_data_by_years(path = "~/Documents/Code/MTF/MTFData
 ```{r}
 raw_data_combined = inner_join(raw_data_file1, raw_data_file2, by = c("R'S ID-SERIAL #", "year"))
 
-knitr::kable(raw_data_combined[100:110,])
-summary(raw_data_combined)
+knitr::kable(raw_data_combined[100:105,])
+#summary(raw_data_combined)
 ```
 
 NOTES:
@@ -213,12 +213,29 @@ At minimum:
 7. Create dummy variable for each year of the survey, to account for historical trends. (Note: in original paper they did this and then found the dummy variables to not be significant. But it's worth it for me to check, both for 2009-2018 and if I add in any new predictors or outcoems.)
 
 ```{r data_wrangling}
+# TODO - remove 'NO_MISSING' versions of community attachment scores if I decide that's the right approach (currently not selected)
+
 recoded = raw_data_combined %>% 
   na_if(., -9) %>% # This is how MTF codes missing values
   na_if(., -8) %>% # This is how my code (and sometimes MTF) codes questions that weren't asked to a participant
   
   # Values we can use as-is without mutating:
-  rename(., `High school grades` = `R HS GRADE/D=1`
+  rename(., `High school grades` = `R HS GRADE/D=1`,
+         `Cigarettes - Lifetime` = `EVR SMK CIG,REGL`,
+         `Cigarettes - 30 Day` = `#CIGS SMKD/30DAY`,
+         `Binge Drinking` = `5+DRK ROW/LST 2W`,
+         `Marijuana/Hashish – Lifetime` = `#XMJ+HS/LIFETIME`,
+         `Marijuana/Hashish - 30 Day` = `#XMJ+HS/LAST30DAY`,
+         `Cocaine - Lifetime` = `#X COKE/LIFETIME`,
+         `Cocaine - 30 Day` = `#X COKE/LAST30DAY`,
+         `Amphetamines - Lifetime` = `#X AMPH/LIFETIME`,
+         `Amphetamines - 30 Day` = `#X AMPH/LAST30DAY`,
+         `Barbiturates - Lifetime` = `#X SED/BARB/LIFETIME`,
+         `Barbiturates - 30 Day` = `#X SED/BARB/LAST30DAY`,
+         `Tranquilizers - Lifetime` = `#X TRQL/LIFETIME`,
+         `Tranquilizers - 30 Day` = `#X TRQL/LAST30DAY`,
+         `Narcotics - Lifetime` = `#X NARC/LIFETIME`,
+         `Narcotics - 30 Day` = `#X NARC/LAST30DAY`
          ) %>% 
   
   # For both of these, 7 meant "I don't know / doesn't apply" so I'm recoding those as missing
@@ -255,14 +272,70 @@ recoded = raw_data_combined %>%
          rel2scaled = scale(`RLGN IMP R'S LF`),
          `Religiosity` = rowMeans(cbind(rel1scaled, rel2scaled), na.rm = TRUE),
          `Religiosity - NO_MISSING` = rowMeans(cbind(rel1scaled, rel2scaled))
+         ) %>% 
+  
+  # Substance use questions - renamed and recoded
+  mutate(.,
+         `Hallucinogens - Lifetime` = pmax(`#X LSD/LIFETIME`, `#X PSYD/LIFETIME`, na.rm = TRUE), # Double check these are correct
+         `Hallucinogens - 30 Day` = pmax(`#X LSD/LAST30DAY`, `#X PSYD/LAST30DAY`, na.rm = TRUE),
+         `Alcohol - Lifetime` = case_when(
+           year <= 2016 ~ `#X ALC/LIF SIPS`,
+           year > 2016 ~ `#X DRNK/LIFETIME`),
+         `Alcohol - 30 Day` = case_when(
+           year <= 2016 ~ `#X ALC/30D SIPS`,
+           year > 2016 ~ `#X DRNK/LAST30DAY`),
+         `Other illicit drugs – Lifetime` = as.factor(case_when(
+           `Hallucinogens - Lifetime` > 1 | `Cocaine - Lifetime` > 1 |
+            `Amphetamines - Lifetime` > 1 | `Barbiturates - Lifetime` > 1 |
+            `Tranquilizers - Lifetime` > 1 | `Narcotics - Lifetime` > 1 ~ "Yes", # If their answer was greater than "none" for any illicit drug, code this as "yes"
+           TRUE ~ "No")), # Otherwise, code as "No" --> could instead be 1/0
+         `Other illicit drugs – 30 Day` = as.factor(case_when(
+           `Hallucinogens - 30 Day` > 1 | `Cocaine - 30 Day` > 1 |
+            `Amphetamines - 30 Day` > 1 | `Barbiturates - 30 Day` > 1 |
+            `Tranquilizers - 30 Day` > 1 | `Narcotics - 30 Day` > 1 ~ "Yes",
+           TRUE ~ "No"))
+         ) %>% 
+  
+  # Rearrange columns, and get rid of any we don't need any more
+  select(., `R'S ID-SERIAL #`, `SAMPLING WEIGHT`,
+         year, Sex, Race, `High school grades`, `College aspirations`, `Parents' education`,
+         `Social Trust`, `Social Responsibility`, `Religiosity`,
+         `Cigarettes - Lifetime`,
+         `Cigarettes - 30 Day`,
+         `Alcohol - Lifetime`,
+         `Alcohol - 30 Day`,
+         `Binge Drinking`,
+         `Marijuana/Hashish – Lifetime`,
+         `Marijuana/Hashish - 30 Day`,
+         `Other illicit drugs – Lifetime`,
+         `Other illicit drugs – 30 Day`,
+         `Hallucinogens - Lifetime`,
+         `Hallucinogens - 30 Day`,
+         `Cocaine - Lifetime`,
+         `Cocaine - 30 Day`,
+         `Amphetamines - Lifetime`,
+         `Amphetamines - 30 Day`,
+         `Barbiturates - Lifetime`,
+         `Barbiturates - 30 Day`,
+         `Tranquilizers - Lifetime`,
+         `Tranquilizers - 30 Day`,
+         `Narcotics - Lifetime`,
+         `Narcotics - 30 Day`,
          )
 
+knitr::kable(recoded[100:105,])
+```
+
+<summary>Click to expand summary data</summary>
+<details>
+``` {r}
 summary(recoded)
 #library(Hmisc)
 #Hmisc::describe(recoded)
 #glimpse(recoded)
 # could do transmute to get rid of old columns! it only keeps the new ones you define
 ```
+</details>
 
 # Random questions and notes for later:
 

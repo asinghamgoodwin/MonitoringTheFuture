@@ -200,7 +200,7 @@ raw_data_file2 = get_specific_data_by_years(path = "~/Documents/Code/MTF/MTFData
 ``` r
 raw_data_combined = inner_join(raw_data_file1, raw_data_file2, by = c("R'S ID-SERIAL #", "year"))
 
-knitr::kable(raw_data_combined[100:110,])
+knitr::kable(raw_data_combined[100:105,])
 ```
 
 | \#CIGS SMKD/30DAY | \#X ALC/30D SIPS | \#X ALC/LIF SIPS | \#X AMPH/LAST30DAY | \#X AMPH/LIFETIME | \#X COKE/LAST30DAY | \#X COKE/LIFETIME | \#X DRNK/LAST30DAY | \#X DRNK/LIFETIME | \#X LSD/LAST30DAY | \#X LSD/LIFETIME | \#X NARC/LAST30DAY | \#X NARC/LIFETIME | \#X PSYD/LAST30DAY | \#X PSYD/LIFETIME | \#X SED/BARB/LAST30DAY | \#X SED/BARB/LIFETIME | \#X TRQL/LAST30DAY | \#X TRQL/LIFETIME | \#XMJ+HS/LAST30DAY | \#XMJ+HS/LIFETIME | 5+DRK ROW/LST 2W | EVR SMK CIG,REGL | FATHR EDUC LEVEL | grade.x | MOTHR EDUC LEVEL | R HS GRADE/D=1 | R WL DO 2YR CLG | R WL DO 4YR CLG | R’S ID-SERIAL \# | R’S RACE | R’S RACE B/W/H | R’S SEX | SAMPLING WEIGHT | year | grade.y | IMP CNTRBTN SOC | IMP CRRCT INEQL | IMP LDR COMUNTY | PPL CAN B TRSTD | PPL TRY B HLPFL | PPL TRY BE FAIR | R’ATTND REL SVC | RLGN IMP R’S LF |
@@ -211,93 +211,10 @@ knitr::kable(raw_data_combined[100:110,])
 |                 4 |                2 |                7 |                  1 |                 1 |                  1 |                 1 |                \-8 |               \-8 |                 1 |                1 |                  1 |                 1 |                  1 |                 2 |                      1 |                     1 |                  1 |                 1 |                  4 |                 7 |                2 |                5 |                3 |      12 |                4 |              6 |               1 |               3 |            10103 |      \-8 |              2 |       2 |          0.3013 | 2009 |      12 |               3 |               4 |               4 |               1 |               2 |               1 |             \-9 |             \-9 |
 |                 1 |                1 |                1 |                \-9 |               \-9 |                  1 |                 1 |                \-8 |               \-8 |                 1 |                1 |                  1 |                 1 |                  1 |                 1 |                      1 |                     1 |                  1 |                 1 |                  1 |                 1 |                1 |                1 |                3 |      12 |                3 |              4 |               3 |               2 |            10104 |      \-8 |            \-9 |       2 |          1.4105 | 2009 |      12 |               3 |               3 |               2 |               1 |               2 |               1 |               4 |               4 |
 |                 1 |                2 |                4 |                  1 |                 1 |                  1 |                 1 |                \-8 |               \-8 |                 1 |                1 |                  1 |                 3 |                  1 |                 1 |                      1 |                     1 |                  1 |                 1 |                  1 |                 2 |                2 |                2 |                3 |      12 |                3 |              9 |               2 |               4 |            10105 |      \-8 |              2 |       2 |          1.0390 | 2009 |      12 |               2 |               1 |               2 |               1 |               1 |               2 |               2 |               2 |
-|                 3 |                3 |                7 |                  1 |                 1 |                  1 |                 2 |                \-8 |               \-8 |                 1 |                1 |                  1 |                 1 |                  1 |                 2 |                      1 |                     1 |                  1 |                 1 |                  6 |                 7 |                1 |                4 |                5 |      12 |                4 |              5 |               1 |               4 |            10106 |      \-8 |              2 |       1 |          0.4684 | 2009 |      12 |               4 |               2 |               4 |               1 |               1 |               1 |               2 |               4 |
-|                 3 |                6 |                7 |                  1 |                 2 |                  1 |                 1 |                \-8 |               \-8 |                 1 |                1 |                  1 |                 3 |                  1 |                 1 |                      1 |                     1 |                  1 |                 1 |                  1 |                 5 |                1 |                5 |                3 |      12 |                3 |              2 |               3 |               4 |            10107 |      \-8 |              2 |       2 |          1.1753 | 2009 |      12 |               4 |               4 |               3 |               1 |               1 |               1 |               1 |               3 |
-|                 1 |                3 |                7 |                  7 |                 7 |                  1 |                 1 |                \-8 |               \-8 |                 1 |                1 |                  1 |                 1 |                  1 |                 1 |                      1 |                     1 |                  1 |                 1 |                  1 |                 1 |                1 |                1 |                1 |      12 |                3 |              8 |             \-9 |             \-9 |            10108 |      \-8 |              1 |       2 |          0.1830 | 2009 |      12 |               3 |               3 |               2 |               1 |               2 |               1 |               4 |               3 |
-|                 3 |                2 |                5 |                  1 |                 2 |                  1 |                 2 |                \-8 |               \-8 |                 1 |                1 |                  1 |                 2 |                  1 |                 2 |                      1 |                     2 |                  1 |                 1 |                  5 |                 6 |                1 |                4 |                4 |      12 |                4 |              7 |               3 |               3 |            10109 |      \-8 |              2 |       1 |          0.9600 | 2009 |      12 |               1 |               2 |               1 |               1 |               2 |               1 |               2 |               1 |
-|                 1 |                1 |                3 |                  1 |                 1 |                  1 |                 1 |                \-8 |               \-8 |                 1 |                1 |                  1 |                 1 |                  1 |                 1 |                      1 |                     1 |                  1 |                 1 |                  3 |                 6 |                1 |                2 |                3 |      12 |                4 |              5 |               1 |               4 |            10110 |      \-8 |            \-9 |       2 |          0.5349 | 2009 |      12 |               3 |               2 |               1 |               1 |               3 |               1 |               1 |               1 |
 
 ``` r
-summary(raw_data_combined)
+#summary(raw_data_combined)
 ```
-
-    ##  #CIGS SMKD/30DAY  #X ALC/30D SIPS   #X ALC/LIF SIPS  #X AMPH/LAST30DAY
-    ##  Min.   :-9.0000   Min.   :-9.0000   Min.   :-9.000   Min.   :-9.0000  
-    ##  1st Qu.: 1.0000   1st Qu.: 1.0000   1st Qu.: 1.000   1st Qu.: 1.0000  
-    ##  Median : 1.0000   Median : 1.0000   Median : 2.000   Median : 1.0000  
-    ##  Mean   : 0.7873   Mean   :-0.6126   Mean   : 0.874   Mean   : 0.2456  
-    ##  3rd Qu.: 1.0000   3rd Qu.: 2.0000   3rd Qu.: 5.000   3rd Qu.: 1.0000  
-    ##  Max.   : 7.0000   Max.   : 7.0000   Max.   : 7.000   Max.   : 7.0000  
-    ##  #X AMPH/LIFETIME  #X COKE/LAST30DAY #X COKE/LIFETIME #X DRNK/LAST30DAY
-    ##  Min.   :-9.0000   Min.   :-9.000    Min.   :-9.000   Min.   :-9.000   
-    ##  1st Qu.: 1.0000   1st Qu.: 1.000    1st Qu.: 1.000   1st Qu.:-8.000   
-    ##  Median : 1.0000   Median : 1.000    Median : 1.000   Median :-8.000   
-    ##  Mean   : 0.3987   Mean   :-0.181    Mean   :-0.124   Mean   :-6.206   
-    ##  3rd Qu.: 1.0000   3rd Qu.: 1.000    3rd Qu.: 1.000   3rd Qu.:-8.000   
-    ##  Max.   : 7.0000   Max.   : 7.000    Max.   : 7.000   Max.   : 7.000   
-    ##  #X DRNK/LIFETIME #X LSD/LAST30DAY #X LSD/LIFETIME   #X NARC/LAST30DAY 
-    ##  Min.   :-9.000   Min.   :-9.000   Min.   :-9.0000   Min.   :-9.00000  
-    ##  1st Qu.:-8.000   1st Qu.: 1.000   1st Qu.: 1.0000   1st Qu.: 1.00000  
-    ##  Median :-8.000   Median : 1.000   Median : 1.0000   Median : 1.00000  
-    ##  Mean   :-5.865   Mean   : 0.313   Mean   : 0.3722   Mean   :-0.03284  
-    ##  3rd Qu.:-8.000   3rd Qu.: 1.000   3rd Qu.: 1.0000   3rd Qu.: 1.00000  
-    ##  Max.   : 7.000   Max.   : 7.000   Max.   : 7.0000   Max.   : 7.00000  
-    ##  #X NARC/LIFETIME  #X PSYD/LAST30DAY #X PSYD/LIFETIME  #X SED/BARB/LAST30DAY
-    ##  Min.   :-9.0000   Min.   :-9.0000   Min.   :-9.0000   Min.   :-9.0000      
-    ##  1st Qu.: 1.0000   1st Qu.: 1.0000   1st Qu.: 1.0000   1st Qu.: 1.0000      
-    ##  Median : 1.0000   Median : 1.0000   Median : 1.0000   Median : 1.0000      
-    ##  Mean   : 0.1359   Mean   : 0.1675   Mean   : 0.2514   Mean   : 0.1435      
-    ##  3rd Qu.: 1.0000   3rd Qu.: 1.0000   3rd Qu.: 1.0000   3rd Qu.: 1.0000      
-    ##  Max.   : 7.0000   Max.   : 7.0000   Max.   : 7.0000   Max.   : 7.0000      
-    ##  #X SED/BARB/LIFETIME #X TRQL/LAST30DAY  #X TRQL/LIFETIME  #XMJ+HS/LAST30DAY
-    ##  Min.   :-9.0000      Min.   :-9.00000   Min.   :-9.0000   Min.   :-9.000   
-    ##  1st Qu.: 1.0000      1st Qu.: 1.00000   1st Qu.: 1.0000   1st Qu.: 1.000   
-    ##  Median : 1.0000      Median : 1.00000   Median : 1.0000   Median : 1.000   
-    ##  Mean   : 0.2204      Mean   : 0.05662   Mean   : 0.1534   Mean   : 1.048   
-    ##  3rd Qu.: 1.0000      3rd Qu.: 1.00000   3rd Qu.: 1.0000   3rd Qu.: 1.000   
-    ##  Max.   : 7.0000      Max.   : 7.00000   Max.   : 7.0000   Max.   : 7.000   
-    ##  #XMJ+HS/LIFETIME 5+DRK ROW/LST 2W  EVR SMK CIG,REGL FATHR EDUC LEVEL
-    ##  Min.   :-9.000   Min.   :-9.0000   Min.   :-9.000   Min.   :-9.000  
-    ##  1st Qu.: 1.000   1st Qu.: 1.0000   1st Qu.: 1.000   1st Qu.: 3.000  
-    ##  Median : 1.000   Median : 1.0000   Median : 1.000   Median : 4.000  
-    ##  Mean   : 2.024   Mean   : 0.6359   Mean   : 1.152   Mean   : 2.775  
-    ##  3rd Qu.: 4.000   3rd Qu.: 1.0000   3rd Qu.: 2.000   3rd Qu.: 5.000  
-    ##  Max.   : 7.000   Max.   : 6.0000   Max.   : 5.000   Max.   : 7.000  
-    ##     grade.x   MOTHR EDUC LEVEL R HS GRADE/D=1  R WL DO 2YR CLG  
-    ##  Min.   :12   Min.   :-9.000   Min.   :-9.00   Min.   :-9.0000  
-    ##  1st Qu.:12   1st Qu.: 3.000   1st Qu.: 4.00   1st Qu.: 1.0000  
-    ##  Median :12   Median : 4.000   Median : 7.00   Median : 1.0000  
-    ##  Mean   :12   Mean   : 2.844   Mean   : 4.69   Mean   : 0.4008  
-    ##  3rd Qu.:12   3rd Qu.: 5.000   3rd Qu.: 8.00   3rd Qu.: 3.0000  
-    ##  Max.   :12   Max.   : 7.000   Max.   : 9.00   Max.   : 4.0000  
-    ##  R WL DO 4YR CLG  R'S ID-SERIAL #    R'S RACE  R'S RACE B/W/H   
-    ##  Min.   :-9.000   Min.   :10001   Min.   :-8   Min.   :-9.0000  
-    ##  1st Qu.: 2.000   1st Qu.:10645   1st Qu.:-8   1st Qu.: 1.0000  
-    ##  Median : 4.000   Median :11237   Median :-8   Median : 2.0000  
-    ##  Mean   : 1.659   Mean   :11244   Mean   :-8   Mean   :-0.4641  
-    ##  3rd Qu.: 4.000   3rd Qu.:11834   3rd Qu.:-8   3rd Qu.: 2.0000  
-    ##  Max.   : 4.000   Max.   :12910   Max.   :-8   Max.   : 3.0000  
-    ##     R'S SEX        SAMPLING WEIGHT        year         grade.y  
-    ##  Min.   :-9.0000   Min.   :0.07635   Min.   :2009   Min.   :12  
-    ##  1st Qu.: 1.0000   1st Qu.:0.61495   1st Qu.:2011   1st Qu.:12  
-    ##  Median : 1.0000   Median :0.85074   Median :2013   Median :12  
-    ##  Mean   : 0.3893   Mean   :0.99824   Mean   :2013   Mean   :12  
-    ##  3rd Qu.: 2.0000   3rd Qu.:1.22205   3rd Qu.:2016   3rd Qu.:12  
-    ##  Max.   : 2.0000   Max.   :5.80390   Max.   :2018   Max.   :12  
-    ##  IMP CNTRBTN SOC  IMP CRRCT INEQL  IMP LDR COMUNTY PPL CAN B TRSTD  
-    ##  Min.   :-9.000   Min.   :-9.000   Min.   :-9.00   Min.   :-9.0000  
-    ##  1st Qu.: 2.000   1st Qu.: 2.000   1st Qu.: 2.00   1st Qu.: 1.0000  
-    ##  Median : 3.000   Median : 2.000   Median : 2.00   Median : 1.0000  
-    ##  Mean   : 2.654   Mean   : 2.139   Mean   : 2.23   Mean   : 0.9586  
-    ##  3rd Qu.: 4.000   3rd Qu.: 3.000   3rd Qu.: 3.00   3rd Qu.: 2.0000  
-    ##  Max.   : 4.000   Max.   : 4.000   Max.   : 4.00   Max.   : 3.0000  
-    ##  PPL TRY B HLPFL  PPL TRY BE FAIR  R'ATTND REL SVC  RLGN IMP R'S LF 
-    ##  Min.   :-9.000   Min.   :-9.000   Min.   :-9.000   Min.   :-9.000  
-    ##  1st Qu.: 1.000   1st Qu.: 1.000   1st Qu.:-9.000   1st Qu.:-9.000  
-    ##  Median : 2.000   Median : 2.000   Median : 2.000   Median : 2.000  
-    ##  Mean   : 1.476   Mean   : 1.375   Mean   :-1.139   Mean   :-1.106  
-    ##  3rd Qu.: 2.000   3rd Qu.: 2.000   3rd Qu.: 3.000   3rd Qu.: 3.000  
-    ##  Max.   : 3.000   Max.   : 3.000   Max.   : 4.000   Max.   : 4.000
 
 NOTES:
 
@@ -318,15 +235,33 @@ SES 6. Combine 2yr and 4yr college graduation expectations 7. Create
 dummy variable for each year of the survey, to account for historical
 trends. (Note: in original paper they did this and then found the dummy
 variables to not be significant. But it’s worth it for me to check, both
-for 2009-2018 and if I add in any new predictors or outcoems.)
+for 2009-2018 and if I add in any new predictors or
+outcoems.)
 
 ``` r
+# TODO - remove 'NO_MISSING' versions of community attachment scores if I decide that's the right approach (currently not selected)
+
 recoded = raw_data_combined %>% 
   na_if(., -9) %>% # This is how MTF codes missing values
   na_if(., -8) %>% # This is how my code (and sometimes MTF) codes questions that weren't asked to a participant
   
   # Values we can use as-is without mutating:
-  rename(., `High school grades` = `R HS GRADE/D=1`
+  rename(., `High school grades` = `R HS GRADE/D=1`,
+         `Cigarettes - Lifetime` = `EVR SMK CIG,REGL`,
+         `Cigarettes - 30 Day` = `#CIGS SMKD/30DAY`,
+         `Binge Drinking` = `5+DRK ROW/LST 2W`,
+         `Marijuana/Hashish – Lifetime` = `#XMJ+HS/LIFETIME`,
+         `Marijuana/Hashish - 30 Day` = `#XMJ+HS/LAST30DAY`,
+         `Cocaine - Lifetime` = `#X COKE/LIFETIME`,
+         `Cocaine - 30 Day` = `#X COKE/LAST30DAY`,
+         `Amphetamines - Lifetime` = `#X AMPH/LIFETIME`,
+         `Amphetamines - 30 Day` = `#X AMPH/LAST30DAY`,
+         `Barbiturates - Lifetime` = `#X SED/BARB/LIFETIME`,
+         `Barbiturates - 30 Day` = `#X SED/BARB/LAST30DAY`,
+         `Tranquilizers - Lifetime` = `#X TRQL/LIFETIME`,
+         `Tranquilizers - 30 Day` = `#X TRQL/LAST30DAY`,
+         `Narcotics - Lifetime` = `#X NARC/LIFETIME`,
+         `Narcotics - 30 Day` = `#X NARC/LAST30DAY`
          ) %>% 
   
   # For both of these, 7 meant "I don't know / doesn't apply" so I'm recoding those as missing
@@ -363,131 +298,157 @@ recoded = raw_data_combined %>%
          rel2scaled = scale(`RLGN IMP R'S LF`),
          `Religiosity` = rowMeans(cbind(rel1scaled, rel2scaled), na.rm = TRUE),
          `Religiosity - NO_MISSING` = rowMeans(cbind(rel1scaled, rel2scaled))
+         ) %>% 
+  
+  # Substance use questions - renamed and recoded
+  mutate(.,
+         `Hallucinogens - Lifetime` = pmax(`#X LSD/LIFETIME`, `#X PSYD/LIFETIME`, na.rm = TRUE), # Double check these are correct
+         `Hallucinogens - 30 Day` = pmax(`#X LSD/LAST30DAY`, `#X PSYD/LAST30DAY`, na.rm = TRUE),
+         `Alcohol - Lifetime` = case_when(
+           year <= 2016 ~ `#X ALC/LIF SIPS`,
+           year > 2016 ~ `#X DRNK/LIFETIME`),
+         `Alcohol - 30 Day` = case_when(
+           year <= 2016 ~ `#X ALC/30D SIPS`,
+           year > 2016 ~ `#X DRNK/LAST30DAY`),
+         `Other illicit drugs – Lifetime` = as.factor(case_when(
+           `Hallucinogens - Lifetime` > 1 | `Cocaine - Lifetime` > 1 |
+            `Amphetamines - Lifetime` > 1 | `Barbiturates - Lifetime` > 1 |
+            `Tranquilizers - Lifetime` > 1 | `Narcotics - Lifetime` > 1 ~ "Yes", # If their answer was greater than "none" for any illicit drug, code this as "yes"
+           TRUE ~ "No")), # Otherwise, code as "No" --> could instead be 1/0
+         `Other illicit drugs – 30 Day` = as.factor(case_when(
+           `Hallucinogens - 30 Day` > 1 | `Cocaine - 30 Day` > 1 |
+            `Amphetamines - 30 Day` > 1 | `Barbiturates - 30 Day` > 1 |
+            `Tranquilizers - 30 Day` > 1 | `Narcotics - 30 Day` > 1 ~ "Yes",
+           TRUE ~ "No"))
+         ) %>% 
+  
+  # Rearrange columns, and get rid of any we don't need any more
+  select(., `R'S ID-SERIAL #`, `SAMPLING WEIGHT`,
+         year, Sex, Race, `High school grades`, `College aspirations`, `Parents' education`,
+         `Social Trust`, `Social Responsibility`, `Religiosity`,
+         `Cigarettes - Lifetime`,
+         `Cigarettes - 30 Day`,
+         `Alcohol - Lifetime`,
+         `Alcohol - 30 Day`,
+         `Binge Drinking`,
+         `Marijuana/Hashish – Lifetime`,
+         `Marijuana/Hashish - 30 Day`,
+         `Other illicit drugs – Lifetime`,
+         `Other illicit drugs – 30 Day`,
+         `Hallucinogens - Lifetime`,
+         `Hallucinogens - 30 Day`,
+         `Cocaine - Lifetime`,
+         `Cocaine - 30 Day`,
+         `Amphetamines - Lifetime`,
+         `Amphetamines - 30 Day`,
+         `Barbiturates - Lifetime`,
+         `Barbiturates - 30 Day`,
+         `Tranquilizers - Lifetime`,
+         `Tranquilizers - 30 Day`,
+         `Narcotics - Lifetime`,
+         `Narcotics - 30 Day`,
          )
 
+knitr::kable(recoded[100:105,])
+```
+
+| R’S ID-SERIAL \# | SAMPLING WEIGHT | year | Sex    | Race          | High school grades | College aspirations  | Parents’ education | Social Trust | Social Responsibility | Religiosity | Cigarettes - Lifetime | Cigarettes - 30 Day | Alcohol - Lifetime | Alcohol - 30 Day | Binge Drinking | Marijuana/Hashish – Lifetime | Marijuana/Hashish - 30 Day | Other illicit drugs – Lifetime | Other illicit drugs – 30 Day | Hallucinogens - Lifetime | Hallucinogens - 30 Day | Cocaine - Lifetime | Cocaine - 30 Day | Amphetamines - Lifetime | Amphetamines - 30 Day | Barbiturates - Lifetime | Barbiturates - 30 Day | Tranquilizers - Lifetime | Tranquilizers - 30 Day | Narcotics - Lifetime | Narcotics - 30 Day |
+| ---------------: | --------------: | ---: | :----- | :------------ | -----------------: | :------------------- | :----------------- | -----------: | --------------------: | ----------: | --------------------: | ------------------: | -----------------: | ---------------: | -------------: | ---------------------------: | -------------------------: | :----------------------------- | :--------------------------- | -----------------------: | ---------------------: | -----------------: | ---------------: | ----------------------: | --------------------: | ----------------------: | --------------------: | -----------------------: | ---------------------: | -------------------: | -----------------: |
+|            10100 |          1.4732 | 2009 | Male   | Hispanic      |                  4 | 4-year college plans | 1                  |     1.000000 |              2.333333 |         NaN |                     1 |                   1 |                  5 |                1 |              1 |                            1 |                          1 | No                             | No                           |                        1 |                      1 |                  1 |                1 |                       1 |                     1 |                       1 |                     1 |                        1 |                      1 |                    1 |                  1 |
+|            10101 |          1.3784 | 2009 | Male   | White         |                  2 | 4-year college plans | 3                  |     1.333333 |              2.333333 |   0.8599165 |                     5 |                   4 |                  7 |                3 |              2 |                            1 |                          1 | No                             | No                           |                        1 |                      1 |                  1 |                1 |                       1 |                     1 |                       1 |                     1 |                        1 |                      1 |                    1 |                  1 |
+|            10102 |          2.5084 | 2009 | Female | White         |                  6 | 4-year college plans | 4                  |     1.666667 |              2.666667 | \-0.0332074 |                     1 |                   1 |                  3 |                1 |              1 |                            1 |                          1 | Yes                            | No                           |                        1 |                      1 |                  1 |                1 |                       1 |                     1 |                       1 |                     1 |                        1 |                      1 |                    2 |                  1 |
+|            10103 |          0.3013 | 2009 | Female | White         |                  6 | 4-year college plans | 4                  |     1.333333 |              3.666667 |         NaN |                     5 |                   4 |                  7 |                2 |              2 |                            7 |                          4 | Yes                            | No                           |                        2 |                      1 |                  1 |                1 |                       1 |                     1 |                       1 |                     1 |                        1 |                      1 |                    1 |                  1 |
+|            10104 |          1.4105 | 2009 | Female | Other/missing |                  4 | 2-year college plans | 3                  |     1.333333 |              2.666667 |   1.3079516 |                     1 |                   1 |                  1 |                1 |              1 |                            1 |                          1 | No                             | No                           |                        1 |                      1 |                  1 |                1 |                      NA |                    NA |                       1 |                     1 |                        1 |                      1 |                    1 |                  1 |
+|            10105 |          1.0390 | 2009 | Female | White         |                  9 | 4-year college plans | 3                  |     1.333333 |              1.666667 | \-0.4812425 |                     2 |                   1 |                  4 |                2 |              2 |                            2 |                          1 | Yes                            | No                           |                        1 |                      1 |                  1 |                1 |                       1 |                     1 |                       1 |                     1 |                        1 |                      1 |                    3 |                  1 |
+
+<summary>Click to expand summary data</summary>
+
+<details>
+
+``` r
 summary(recoded)
 ```
 
-    ##  #CIGS SMKD/30DAY #X ALC/30D SIPS #X ALC/LIF SIPS #X AMPH/LAST30DAY
-    ##  Min.   :1.000    Min.   :1.000   Min.   :1.000   Min.   :1.00     
-    ##  1st Qu.:1.000    1st Qu.:1.000   1st Qu.:2.000   1st Qu.:1.00     
-    ##  Median :1.000    Median :1.000   Median :4.000   Median :1.00     
-    ##  Mean   :1.284    Mean   :1.838   Mean   :3.747   Mean   :1.06     
-    ##  3rd Qu.:1.000    3rd Qu.:2.000   3rd Qu.:6.000   3rd Qu.:1.00     
-    ##  Max.   :7.000    Max.   :7.000   Max.   :7.000   Max.   :7.00     
-    ##  NA's   :1124     NA's   :5694    NA's   :5612    NA's   :1884     
-    ##  #X AMPH/LIFETIME #X COKE/LAST30DAY #X COKE/LIFETIME #X DRNK/LAST30DAY
-    ##  Min.   :1.00     Min.   :1.000     Min.   :1.000    Min.   :1.000    
-    ##  1st Qu.:1.00     1st Qu.:1.000     1st Qu.:1.000    1st Qu.:1.000    
-    ##  Median :1.00     Median :1.000     Median :1.000    Median :1.000    
-    ##  Mean   :1.23     Mean   :1.019     Mean   :1.086    Mean   :1.673    
-    ##  3rd Qu.:1.00     3rd Qu.:1.000     3rd Qu.:1.000    3rd Qu.:2.000    
-    ##  Max.   :7.00     Max.   :7.000     Max.   :7.000    Max.   :7.000    
-    ##  NA's   :1891     NA's   :2787      NA's   :2790     NA's   :18911    
-    ##  #X DRNK/LIFETIME #X LSD/LAST30DAY #X LSD/LIFETIME #X NARC/LAST30DAY
-    ##  Min.   :1.000    Min.   :1.000    Min.   :1.000   Min.   :1.000    
-    ##  1st Qu.:1.000    1st Qu.:1.000    1st Qu.:1.000   1st Qu.:1.000    
-    ##  Median :3.000    Median :1.000    Median :1.000   Median :1.000    
-    ##  Mean   :3.388    Mean   :1.027    Mean   :1.092   Mean   :1.044    
-    ##  3rd Qu.:5.000    3rd Qu.:1.000    3rd Qu.:1.000   3rd Qu.:1.000    
-    ##  Max.   :7.000    Max.   :7.000    Max.   :7.000   Max.   :7.000    
-    ##  NA's   :18874    NA's   :1656     NA's   :1659    NA's   :2494     
-    ##  #X NARC/LIFETIME #X PSYD/LAST30DAY #X PSYD/LIFETIME #X SED/BARB/LAST30DAY
-    ##  Min.   :1.000    Min.   :1.000     Min.   :1.000    Min.   :1.000        
-    ##  1st Qu.:1.000    1st Qu.:1.000     1st Qu.:1.000    1st Qu.:1.000        
-    ##  Median :1.000    Median :1.000     Median :1.000    Median :1.000        
-    ##  Mean   :1.235    Mean   :1.029     Mean   :1.117    Mean   :1.029        
-    ##  3rd Qu.:1.000    3rd Qu.:1.000     3rd Qu.:1.000    3rd Qu.:1.000        
-    ##  Max.   :7.000    Max.   :7.000     Max.   :7.000    Max.   :7.000        
-    ##  NA's   :2498     NA's   :1999      NA's   :1991     NA's   :2054         
-    ##  #X SED/BARB/LIFETIME #X TRQL/LAST30DAY #X TRQL/LIFETIME #XMJ+HS/LAST30DAY
-    ##  Min.   :1.000        Min.   :1.000     Min.   :1.000    Min.   :1.000    
-    ##  1st Qu.:1.000        1st Qu.:1.000     1st Qu.:1.000    1st Qu.:1.000    
-    ##  Median :1.000        Median :1.000     Median :1.000    Median :1.000    
-    ##  Mean   :1.116        Mean   :1.035     Mean   :1.148    Mean   :1.707    
-    ##  3rd Qu.:1.000        3rd Qu.:1.000     3rd Qu.:1.000    3rd Qu.:1.000    
-    ##  Max.   :7.000        Max.   :7.000     Max.   :7.000    Max.   :7.000    
-    ##  NA's   :2060         NA's   :2268      NA's   :2280     NA's   :1432     
-    ##  #XMJ+HS/LIFETIME 5+DRK ROW/LST 2W EVR SMK CIG,REGL FATHR EDUC LEVEL
-    ##  Min.   :1.000    Min.   :1.000    Min.   :1.000    Min.   :1.000   
-    ##  1st Qu.:1.000    1st Qu.:1.000    1st Qu.:1.000    1st Qu.:3.000   
-    ##  Median :1.000    Median :1.000    Median :1.000    Median :4.000   
-    ##  Mean   :2.707    Mean   :1.321    Mean   :1.674    Mean   :3.846   
-    ##  3rd Qu.:4.000    3rd Qu.:1.000    3rd Qu.:2.000    3rd Qu.:5.000   
-    ##  Max.   :7.000    Max.   :6.000    Max.   :5.000    Max.   :6.000   
-    ##  NA's   :1357     NA's   :1543     NA's   :1138     NA's   :4184    
-    ##     grade.x   MOTHR EDUC LEVEL High school grades R WL DO 2YR CLG
-    ##  Min.   :12   Min.   :1.000    Min.   :1.000      Min.   :1.000  
-    ##  1st Qu.:12   1st Qu.:3.000    1st Qu.:5.000      1st Qu.:1.000  
-    ##  Median :12   Median :4.000    Median :7.000      Median :2.000  
-    ##  Mean   :12   Mean   :4.056    Mean   :6.654      Mean   :2.236  
-    ##  3rd Qu.:12   3rd Qu.:5.000    3rd Qu.:8.000      3rd Qu.:3.000  
-    ##  Max.   :12   Max.   :6.000    Max.   :9.000      Max.   :4.000  
-    ##               NA's   :3447     NA's   :2918       NA's   :3800   
-    ##  R WL DO 4YR CLG R'S ID-SERIAL #    R'S RACE     R'S RACE B/W/H 
-    ##  Min.   :1.000   Min.   :10001   Min.   : NA     Min.   :1.000  
-    ##  1st Qu.:3.000   1st Qu.:10645   1st Qu.: NA     1st Qu.:2.000  
-    ##  Median :4.000   Median :11237   Median : NA     Median :2.000  
-    ##  Mean   :3.396   Mean   :11244   Mean   :NaN     Mean   :2.055  
-    ##  3rd Qu.:4.000   3rd Qu.:11834   3rd Qu.: NA     3rd Qu.:2.000  
-    ##  Max.   :4.000   Max.   :12910   Max.   : NA     Max.   :3.000  
-    ##  NA's   :3260                    NA's   :23262   NA's   :5300   
-    ##     R'S SEX      SAMPLING WEIGHT        year         grade.y   IMP CNTRBTN SOC
-    ##  Min.   :1.000   Min.   :0.07635   Min.   :2009   Min.   :12   Min.   :1.00   
-    ##  1st Qu.:1.000   1st Qu.:0.61495   1st Qu.:2011   1st Qu.:12   1st Qu.:2.00   
-    ##  Median :2.000   Median :0.85074   Median :2013   Median :12   Median :3.00   
-    ##  Mean   :1.518   Mean   :0.99824   Mean   :2013   Mean   :12   Mean   :2.97   
-    ##  3rd Qu.:2.000   3rd Qu.:1.22205   3rd Qu.:2016   3rd Qu.:12   3rd Qu.:4.00   
-    ##  Max.   :2.000   Max.   :5.80390   Max.   :2018   Max.   :12   Max.   :4.00   
-    ##  NA's   :2497                                                  NA's   :614    
-    ##  IMP CRRCT INEQL IMP LDR COMUNTY PPL CAN B TRSTD PPL TRY B HLPFL
-    ##  Min.   :1.000   Min.   :1.000   Min.   :1.000   Min.   :1.000  
-    ##  1st Qu.:2.000   1st Qu.:2.000   1st Qu.:1.000   1st Qu.:1.000  
-    ##  Median :2.000   Median :2.000   Median :1.000   Median :2.000  
-    ##  Mean   :2.465   Mean   :2.533   Mean   :1.632   Mean   :1.813  
-    ##  3rd Qu.:3.000   3rd Qu.:3.000   3rd Qu.:2.000   3rd Qu.:2.000  
-    ##  Max.   :4.000   Max.   :4.000   Max.   :3.000   Max.   :3.000  
-    ##  NA's   :661     NA's   :611     NA's   :1474    NA's   :725    
-    ##  PPL TRY BE FAIR R'ATTND REL SVC RLGN IMP R'S LF     Sex       
-    ##  Min.   :1.000   Min.   :1.000   Min.   :1.000   Female:10765  
-    ##  1st Qu.:1.000   1st Qu.:2.000   1st Qu.:2.000   Male  :10000  
-    ##  Median :2.000   Median :2.000   Median :3.000   NA's  : 2497  
-    ##  Mean   :1.723   Mean   :2.514   Mean   :2.561                 
-    ##  3rd Qu.:2.000   3rd Qu.:4.000   3rd Qu.:4.000                 
-    ##  Max.   :3.000   Max.   :4.000   Max.   :4.000                 
-    ##  NA's   :756     NA's   :7380    NA's   :7380                  
-    ##             Race                 College aspirations Parents' education
-    ##  Black        : 2552   2-year college plans: 1773    1   : 561         
-    ##  Hispanic     : 3531   4-year college plans:16936    2   :1205         
-    ##  Other/missing: 5300   No college plans    : 1478    3   :3600         
-    ##  White        :11879   NA's                : 3075    4   :4035         
-    ##                                                      5   :6451         
-    ##                                                      6   :4281         
-    ##                                                      NA's:3129         
-    ##   Social Trust   Social Trust - NO_MISSING Social Responsibility
-    ##  Min.   :1.000   Min.   :1.000             Min.   :1.000        
-    ##  1st Qu.:1.333   1st Qu.:1.333             1st Qu.:2.000        
-    ##  Median :1.667   Median :1.667             Median :2.667        
-    ##  Mean   :1.725   Mean   :1.722             Mean   :2.656        
-    ##  3rd Qu.:2.000   3rd Qu.:2.000             3rd Qu.:3.333        
-    ##  Max.   :3.000   Max.   :3.000             Max.   :4.000        
-    ##  NA's   :559     NA's   :1689              NA's   :518          
-    ##  Social Responsibility - NO_MISSING  rel1scaled.V1    rel2scaled.V1  
-    ##  Min.   :1.000                      Min.   :-1.353   Min.   :-1.399  
-    ##  1st Qu.:2.000                      1st Qu.:-0.459   1st Qu.:-0.503  
-    ##  Median :2.667                      Median :-0.459   Median : 0.393  
-    ##  Mean   :2.656                      Mean   : 0.000   Mean   : 0.000  
-    ##  3rd Qu.:3.333                      3rd Qu.: 1.327   3rd Qu.: 1.289  
-    ##  Max.   :4.000                      Max.   : 1.327   Max.   : 1.289  
-    ##  NA's   :827                        NA's   :7380     NA's   :7380    
-    ##   Religiosity     Religiosity - NO_MISSING
-    ##  Min.   :-1.399   Min.   :-1.376          
-    ##  1st Qu.:-0.928   1st Qu.:-0.928          
-    ##  Median :-0.033   Median :-0.033          
-    ##  Mean   : 0.000   Mean   : 0.000          
-    ##  3rd Qu.: 0.860   3rd Qu.: 0.860          
-    ##  Max.   : 1.327   Max.   : 1.308          
-    ##  NA's   :7316     NA's   :7444
+    ##  R'S ID-SERIAL # SAMPLING WEIGHT        year          Sex       
+    ##  Min.   :10001   Min.   :0.07635   Min.   :2009   Female:10765  
+    ##  1st Qu.:10645   1st Qu.:0.61495   1st Qu.:2011   Male  :10000  
+    ##  Median :11237   Median :0.85074   Median :2013   NA's  : 2497  
+    ##  Mean   :11244   Mean   :0.99824   Mean   :2013                 
+    ##  3rd Qu.:11834   3rd Qu.:1.22205   3rd Qu.:2016                 
+    ##  Max.   :12910   Max.   :5.80390   Max.   :2018                 
+    ##                                                                 
+    ##             Race       High school grades           College aspirations
+    ##  Black        : 2552   Min.   :1.000      2-year college plans: 1773   
+    ##  Hispanic     : 3531   1st Qu.:5.000      4-year college plans:16936   
+    ##  Other/missing: 5300   Median :7.000      No college plans    : 1478   
+    ##  White        :11879   Mean   :6.654      NA's                : 3075   
+    ##                        3rd Qu.:8.000                                   
+    ##                        Max.   :9.000                                   
+    ##                        NA's   :2918                                    
+    ##  Parents' education  Social Trust   Social Responsibility  Religiosity    
+    ##  1   : 561          Min.   :1.000   Min.   :1.000         Min.   :-1.399  
+    ##  2   :1205          1st Qu.:1.333   1st Qu.:2.000         1st Qu.:-0.928  
+    ##  3   :3600          Median :1.667   Median :2.667         Median :-0.033  
+    ##  4   :4035          Mean   :1.725   Mean   :2.656         Mean   : 0.000  
+    ##  5   :6451          3rd Qu.:2.000   3rd Qu.:3.333         3rd Qu.: 0.860  
+    ##  6   :4281          Max.   :3.000   Max.   :4.000         Max.   : 1.327  
+    ##  NA's:3129          NA's   :559     NA's   :518           NA's   :7316    
+    ##  Cigarettes - Lifetime Cigarettes - 30 Day Alcohol - Lifetime Alcohol - 30 Day
+    ##  Min.   :1.000         Min.   :1.000       Min.   :1.000      Min.   :1.000   
+    ##  1st Qu.:1.000         1st Qu.:1.000       1st Qu.:1.000      1st Qu.:1.000   
+    ##  Median :1.000         Median :1.000       Median :3.000      Median :1.000   
+    ##  Mean   :1.674         Mean   :1.284       Mean   :3.676      Mean   :1.806   
+    ##  3rd Qu.:2.000         3rd Qu.:1.000       3rd Qu.:6.000      3rd Qu.:2.000   
+    ##  Max.   :5.000         Max.   :7.000       Max.   :7.000      Max.   :7.000   
+    ##  NA's   :1138          NA's   :1124        NA's   :1224       NA's   :1343    
+    ##  Binge Drinking  Marijuana/Hashish – Lifetime Marijuana/Hashish - 30 Day
+    ##  Min.   :1.000   Min.   :1.000                Min.   :1.000             
+    ##  1st Qu.:1.000   1st Qu.:1.000                1st Qu.:1.000             
+    ##  Median :1.000   Median :1.000                Median :1.000             
+    ##  Mean   :1.321   Mean   :2.707                Mean   :1.707             
+    ##  3rd Qu.:1.000   3rd Qu.:4.000                3rd Qu.:1.000             
+    ##  Max.   :6.000   Max.   :7.000                Max.   :7.000             
+    ##  NA's   :1543    NA's   :1357                 NA's   :1432              
+    ##  Other illicit drugs – Lifetime Other illicit drugs – 30 Day
+    ##  No :18816                      No :21779                   
+    ##  Yes: 4446                      Yes: 1483                   
+    ##                                                             
+    ##                                                             
+    ##                                                             
+    ##                                                             
+    ##                                                             
+    ##  Hallucinogens - Lifetime Hallucinogens - 30 Day Cocaine - Lifetime
+    ##  Min.   :1.000            Min.   :1.000          Min.   :1.000     
+    ##  1st Qu.:1.000            1st Qu.:1.000          1st Qu.:1.000     
+    ##  Median :1.000            Median :1.000          Median :1.000     
+    ##  Mean   :1.151            Mean   :1.042          Mean   :1.086     
+    ##  3rd Qu.:1.000            3rd Qu.:1.000          3rd Qu.:1.000     
+    ##  Max.   :7.000            Max.   :7.000          Max.   :7.000     
+    ##  NA's   :1440             NA's   :1439           NA's   :2790      
+    ##  Cocaine - 30 Day Amphetamines - Lifetime Amphetamines - 30 Day
+    ##  Min.   :1.000    Min.   :1.00            Min.   :1.00         
+    ##  1st Qu.:1.000    1st Qu.:1.00            1st Qu.:1.00         
+    ##  Median :1.000    Median :1.00            Median :1.00         
+    ##  Mean   :1.019    Mean   :1.23            Mean   :1.06         
+    ##  3rd Qu.:1.000    3rd Qu.:1.00            3rd Qu.:1.00         
+    ##  Max.   :7.000    Max.   :7.00            Max.   :7.00         
+    ##  NA's   :2787     NA's   :1891            NA's   :1884         
+    ##  Barbiturates - Lifetime Barbiturates - 30 Day Tranquilizers - Lifetime
+    ##  Min.   :1.000           Min.   :1.000         Min.   :1.000           
+    ##  1st Qu.:1.000           1st Qu.:1.000         1st Qu.:1.000           
+    ##  Median :1.000           Median :1.000         Median :1.000           
+    ##  Mean   :1.116           Mean   :1.029         Mean   :1.148           
+    ##  3rd Qu.:1.000           3rd Qu.:1.000         3rd Qu.:1.000           
+    ##  Max.   :7.000           Max.   :7.000         Max.   :7.000           
+    ##  NA's   :2060            NA's   :2054          NA's   :2280            
+    ##  Tranquilizers - 30 Day Narcotics - Lifetime Narcotics - 30 Day
+    ##  Min.   :1.000          Min.   :1.000        Min.   :1.000     
+    ##  1st Qu.:1.000          1st Qu.:1.000        1st Qu.:1.000     
+    ##  Median :1.000          Median :1.000        Median :1.000     
+    ##  Mean   :1.035          Mean   :1.235        Mean   :1.044     
+    ##  3rd Qu.:1.000          3rd Qu.:1.000        3rd Qu.:1.000     
+    ##  Max.   :7.000          Max.   :7.000        Max.   :7.000     
+    ##  NA's   :2268           NA's   :2498         NA's   :2494
 
 ``` r
 #library(Hmisc)
@@ -495,6 +456,8 @@ summary(recoded)
 #glimpse(recoded)
 # could do transmute to get rid of old columns! it only keeps the new ones you define
 ```
+
+</details>
 
 # Random questions and notes for later:
 
