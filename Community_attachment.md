@@ -35,7 +35,7 @@ I’ll also need to pull some basic demographics from the core form (file
 
 <details>
 
-<summary>Click to see code & notes</summmary>
+<summary> Click to see code & notes </summary>
 
 ``` r
 all_years = 1976:2018
@@ -47,9 +47,9 @@ These two helper functions come from separate R scripts.
 
 Create a standardized list of names for variables across years.
 
-*TODO - this shouldn’t happen in this file…. once I’ve gotten a better
+TODO - this shouldn’t happen in this file…. once I’ve gotten a better
 handle on it I’d like to do this somewhere separate and have a
-definitive static file of standard names to reference.*
+definitive static file of standard names to reference.
 
 ``` r
 grade12_file1_mapping = tibble()
@@ -81,7 +81,7 @@ attachment, and substance use.
 
 <details>
 
-<summary>Click to see lists of variable names to include.</summary>
+<summary> Click to see code & notes </summary>
 
 ``` r
 demographics = c("R'S ID-SERIAL #",
@@ -158,24 +158,20 @@ yet\!)*.
 
 </details>
 
-**Next, get data from all participants for each of the variables above.
-Merge/combine by ID number and year.**
+<br> **Next, get data from all participants for each of the variables
+above. Merge/combine by ID number and year.**
 
 <details>
 
-<summary>Click to see code & notes</summmary>
+<summary> Click to see code & notes </summary> Notes:
 
-Notes:
+TODO: probably worth making/modifying a helper function so that the
+merges can be automatic.
 
-  - *TODO: probably worth making/modifying a helper function so that the
-    merges can be automatic.*
-  - Although many of the variables in `demographics`, `substance_use`,
-    and `community_attachment` can be found in file 1 and file 2, the
-    variables names are cleaner for substance use in file 1, so I’ve
-    decided to get all deomgraphics and substance use info from file 1,
-    all community attachment info from file 2, and combine on ID number.
-
-<!-- end list -->
+Although many of the variables in can be found in file 1 and file 2, the
+variables names are cleaner for substance use in file 1, so I’ve decided
+to get all deomgraphics and substance use info from file 1, all
+community attachment info from file 2, and combine on ID number.
 
 ``` r
 # TODO: add in from new_variable_lists once I get there
@@ -205,13 +201,13 @@ knitr::kable(raw_data_combined[100:105,])
 ```
 
 | \#CIGS SMKD/30DAY | \#X ALC/30D SIPS | \#X ALC/LIF SIPS | \#X AMPH/LAST30DAY | \#X AMPH/LIFETIME | \#X COKE/LAST30DAY | \#X COKE/LIFETIME | \#X DRNK/LAST30DAY | \#X DRNK/LIFETIME | \#X LSD/LAST30DAY | \#X LSD/LIFETIME | \#X NARC/LAST30DAY | \#X NARC/LIFETIME | \#X PSYD/LAST30DAY | \#X PSYD/LIFETIME | \#X SED/BARB/LAST30DAY | \#X SED/BARB/LIFETIME | \#X TRQL/LAST30DAY | \#X TRQL/LIFETIME | \#XMJ+HS/LAST30DAY | \#XMJ+HS/LIFETIME | 5+DRK ROW/LST 2W | EVR SMK CIG,REGL | FATHR EDUC LEVEL | grade.x | MOTHR EDUC LEVEL | R HS GRADE/D=1 | R WL DO 2YR CLG | R WL DO 4YR CLG | R’S ID-SERIAL \# | R’S RACE | R’S RACE B/W/H | R’S SEX | SAMPLING WEIGHT | year | grade.y | IMP CNTRBTN SOC | IMP CRRCT INEQL | IMP LDR COMUNTY | PPL CAN B TRSTD | PPL TRY B HLPFL | PPL TRY BE FAIR | R’ATTND REL SVC | RLGN IMP R’S LF |
-| :---------------- | :--------------- | :--------------- | :----------------- | :---------------- | :----------------- | :---------------- | :----------------- | :---------------- | :---------------- | :--------------- | :----------------- | :---------------- | :----------------- | :---------------- | :--------------------- | :-------------------- | :----------------- | :---------------- | :----------------- | :---------------- | :--------------- | :--------------- | :--------------- | :------ | :--------------- | :------------- | :-------------- | :-------------- | :--------------- | :------- | :------------- | :------ | :-------------- | :--- | :------ | :-------------- | :-------------- | :-------------- | :-------------- | :-------------- | :-------------- | :-------------- | :-------------- |
-| 1                 | 1                | 5                | 1                  | 1                 | 1                  | 1                 | \-8                | \-8               | 1                 | 1                | 1                  | 1                 | 1                  | 1                 | 1                      | 1                     | 1                  | 1                 | 1                  | 1                 | 1                | 1                | 7                | 12      | 1                | 4              | 1               | 3               | 10100            | \-8      | 3              | 1       | 1.4732          | 2009 | 12      | 3               | 2               | 2               | 1               | 1               | 1               | \-9             | \-9             |
-| 4                 | 3                | 7                | 1                  | 1                 | 1                  | 1                 | \-8                | \-8               | 1                 | 1                | 1                  | 1                 | 1                  | 1                 | 1                      | 1                     | 1                  | 1                 | 1                  | 1                 | 2                | 5                | 3                | 12      | 3                | 2              | 3               | 3               | 10101            | \-8      | 2              | 1       | 1.3784          | 2009 | 12      | 2               | 2               | 3               | 2               | 1               | 1               | 4               | 3               |
-| 1                 | 1                | 3                | 1                  | 1                 | 1                  | 1                 | \-8                | \-8               | 1                 | 1                | 1                  | 2                 | 1                  | 1                 | 1                      | 1                     | 1                  | 1                 | 1                  | 1                 | 1                | 1                | 2                | 12      | 4                | 6              | 3               | 3               | 10102            | \-8      | 2              | 2       | 2.5084          | 2009 | 12      | 3               | 3               | 2               | 1               | 2               | 2               | 2               | 3               |
-| 4                 | 2                | 7                | 1                  | 1                 | 1                  | 1                 | \-8                | \-8               | 1                 | 1                | 1                  | 1                 | 1                  | 2                 | 1                      | 1                     | 1                  | 1                 | 4                  | 7                 | 2                | 5                | 3                | 12      | 4                | 6              | 1               | 3               | 10103            | \-8      | 2              | 2       | 0.3013          | 2009 | 12      | 3               | 4               | 4               | 1               | 2               | 1               | \-9             | \-9             |
-| 1                 | 1                | 1                | \-9                | \-9               | 1                  | 1                 | \-8                | \-8               | 1                 | 1                | 1                  | 1                 | 1                  | 1                 | 1                      | 1                     | 1                  | 1                 | 1                  | 1                 | 1                | 1                | 3                | 12      | 3                | 4              | 3               | 2               | 10104            | \-8      | \-9            | 2       | 1.4105          | 2009 | 12      | 3               | 3               | 2               | 1               | 2               | 1               | 4               | 4               |
-| 1                 | 2                | 4                | 1                  | 1                 | 1                  | 1                 | \-8                | \-8               | 1                 | 1                | 1                  | 3                 | 1                  | 1                 | 1                      | 1                     | 1                  | 1                 | 1                  | 2                 | 2                | 2                | 3                | 12      | 3                | 9              | 2               | 4               | 10105            | \-8      | 2              | 2       | 1.0390          | 2009 | 12      | 2               | 1               | 2               | 1               | 1               | 2               | 2               | 2               |
+| ----------------: | ---------------: | ---------------: | -----------------: | ----------------: | -----------------: | ----------------: | -----------------: | ----------------: | ----------------: | ---------------: | -----------------: | ----------------: | -----------------: | ----------------: | ---------------------: | --------------------: | -----------------: | ----------------: | -----------------: | ----------------: | ---------------: | ---------------: | ---------------: | ------: | ---------------: | -------------: | --------------: | --------------: | ---------------: | -------: | -------------: | ------: | --------------: | ---: | ------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: |
+|                 1 |                1 |                5 |                  1 |                 1 |                  1 |                 1 |                \-8 |               \-8 |                 1 |                1 |                  1 |                 1 |                  1 |                 1 |                      1 |                     1 |                  1 |                 1 |                  1 |                 1 |                1 |                1 |                7 |      12 |                1 |              4 |               1 |               3 |            10100 |      \-8 |              3 |       1 |          1.4732 | 2009 |      12 |               3 |               2 |               2 |               1 |               1 |               1 |             \-9 |             \-9 |
+|                 4 |                3 |                7 |                  1 |                 1 |                  1 |                 1 |                \-8 |               \-8 |                 1 |                1 |                  1 |                 1 |                  1 |                 1 |                      1 |                     1 |                  1 |                 1 |                  1 |                 1 |                2 |                5 |                3 |      12 |                3 |              2 |               3 |               3 |            10101 |      \-8 |              2 |       1 |          1.3784 | 2009 |      12 |               2 |               2 |               3 |               2 |               1 |               1 |               4 |               3 |
+|                 1 |                1 |                3 |                  1 |                 1 |                  1 |                 1 |                \-8 |               \-8 |                 1 |                1 |                  1 |                 2 |                  1 |                 1 |                      1 |                     1 |                  1 |                 1 |                  1 |                 1 |                1 |                1 |                2 |      12 |                4 |              6 |               3 |               3 |            10102 |      \-8 |              2 |       2 |          2.5084 | 2009 |      12 |               3 |               3 |               2 |               1 |               2 |               2 |               2 |               3 |
+|                 4 |                2 |                7 |                  1 |                 1 |                  1 |                 1 |                \-8 |               \-8 |                 1 |                1 |                  1 |                 1 |                  1 |                 2 |                      1 |                     1 |                  1 |                 1 |                  4 |                 7 |                2 |                5 |                3 |      12 |                4 |              6 |               1 |               3 |            10103 |      \-8 |              2 |       2 |          0.3013 | 2009 |      12 |               3 |               4 |               4 |               1 |               2 |               1 |             \-9 |             \-9 |
+|                 1 |                1 |                1 |                \-9 |               \-9 |                  1 |                 1 |                \-8 |               \-8 |                 1 |                1 |                  1 |                 1 |                  1 |                 1 |                      1 |                     1 |                  1 |                 1 |                  1 |                 1 |                1 |                1 |                3 |      12 |                3 |              4 |               3 |               2 |            10104 |      \-8 |            \-9 |       2 |          1.4105 | 2009 |      12 |               3 |               3 |               2 |               1 |               2 |               1 |               4 |               4 |
+|                 1 |                2 |                4 |                  1 |                 1 |                  1 |                 1 |                \-8 |               \-8 |                 1 |                1 |                  1 |                 3 |                  1 |                 1 |                      1 |                     1 |                  1 |                 1 |                  1 |                 2 |                2 |                2 |                3 |      12 |                3 |              9 |               2 |               4 |            10105 |      \-8 |              2 |       2 |          1.0390 | 2009 |      12 |               2 |               1 |               2 |               1 |               1 |               2 |               2 |               2 |
 
 ``` r
 #summary(raw_data_combined)
@@ -364,9 +360,8 @@ recoded = raw_data_combined %>%
 
 </details>
 
-``` r
-knitr::kable(recoded[100:105,])
-```
+<br> Here’s a random snapshot of what the data looks like at this
+point:
 
 | R’S ID-SERIAL \# | SAMPLING WEIGHT | year | Sex    | Race          | High school grades | College aspirations  | Parents’ education | Social Trust | Social Responsibility | Religiosity | Cigarettes - Lifetime | Cigarettes - 30 Day | Alcohol - Lifetime | Alcohol - 30 Day | Binge Drinking | Marijuana/Hashish – Lifetime | Marijuana/Hashish - 30 Day | Other illicit drugs – Lifetime | Other illicit drugs – 30 Day | Hallucinogens - Lifetime | Hallucinogens - 30 Day | Cocaine - Lifetime | Cocaine - 30 Day | Amphetamines - Lifetime | Amphetamines - 30 Day | Barbiturates - Lifetime | Barbiturates - 30 Day | Tranquilizers - Lifetime | Tranquilizers - 30 Day | Narcotics - Lifetime | Narcotics - 30 Day |
 | ---------------: | --------------: | ---: | :----- | :------------ | -----------------: | :------------------- | :----------------- | -----------: | --------------------: | ----------: | --------------------: | ------------------: | -----------------: | ---------------: | -------------: | ---------------------------: | -------------------------: | :----------------------------- | :--------------------------- | -----------------------: | ---------------------: | -----------------: | ---------------: | ----------------------: | --------------------: | ----------------------: | --------------------: | -----------------------: | ---------------------: | -------------------: | -----------------: |
@@ -379,9 +374,9 @@ knitr::kable(recoded[100:105,])
 
 <details>
 
-<summary>Click to expand summary data from this table (ugly formatting,
-I hope to find an R tool that makes this easier to parse, like “proc
-freq” in SAS\!)</summary>
+<summary> Click to expand summary data from this table </summary> This
+has ugly formatting :( I hope to find an R tool that makes this easier
+to parse, like “proc freq” in SAS\!
 
 ``` r
 summary(recoded)

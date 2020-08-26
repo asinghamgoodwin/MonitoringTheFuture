@@ -5,6 +5,7 @@ output: github_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
+  cache = TRUE,
   echo = TRUE,
   fig.width = 6,
   fig.asp = .6,
@@ -37,8 +38,7 @@ Some random thoughts and new directions I have in mind for potential next steps:
 Luckily, everything in the base set of community attachment measures, substance use, and most control variables are asked in form 1 (file 2). I'll also need to pull some basic demographics from the core form (file 1).
 
 <details>
-  <summary>Click to see code & notes</summmary>
-
+<summary> Click to see code & notes </summary>
 ```{r general_constants}
 all_years = 1976:2018
 old_years = 1976:2008
@@ -56,7 +56,7 @@ source('tools/creating-datasets/get-specific-data-by-years.R', local = knitr::kn
 
 Create a standardized list of names for variables across years.
 
-*TODO - this shouldn't happen in this file.... once I've gotten a better handle on it I'd like to do this somewhere separate and have a definitive static file of standard names to reference.*
+TODO - this shouldn't happen in this file.... once I've gotten a better handle on it I'd like to do this somewhere separate and have a definitive static file of standard names to reference.
 
 ``` {r generate_mapping_files}
 
@@ -78,14 +78,14 @@ for (year in new_years) {
                                 )
 }
 ```
+
 </details>
 
 ## Step 1: Create a smaller database that includes only the variables I need
 
 **First, define the list of variables we want.** The original paper includes demographics (control variables), measures of community attachment, and substance use.
-
 <details>
-  <summary>Click to see lists of variable names to include.</summary>
+<summary> Click to see code & notes </summary>
 ```{r base_variable_lists}
 demographics = c("R'S ID-SERIAL #",
                  "SAMPLING WEIGHT",
@@ -158,15 +158,16 @@ I'm potentially interested in a handful more variables, such as *X, Y, Z (not ad
 ```
 </details>
 
+<br>
 **Next, get data from all participants for each of the variables above. Merge/combine by ID number and year.**
 
 <details>
-  <summary>Click to see code & notes</summmary>
-
+<summary> Click to see code & notes </summary>
 Notes:
 
-* *TODO: probably worth making/modifying a helper function so that the merges can be automatic.*
-* Although many of the variables in `demographics`, `substance_use`, and `community_attachment` can be found in file 1 and file 2, the variables names are cleaner for substance use in file 1, so I've decided to get all deomgraphics and substance use info from file 1, all community attachment info from file 2, and combine on ID number.
+TODO: probably worth making/modifying a helper function so that the merges can be automatic.
+
+Although many of the variables in can be found in file 1 and file 2, the variables names are cleaner for substance use in file 1, so I've decided to get all deomgraphics and substance use info from file 1, all community attachment info from file 2, and combine on ID number.
 ```{r}
 # TODO: add in from new_variable_lists once I get there
 # TODO: switch from new_years to all_years once I've gotten the old data into good shape
@@ -331,13 +332,15 @@ recoded = raw_data_combined %>%
 ```
 </details>
 
-```{r}
+<br>
+Here's a random snapshot of what the data looks like at this point:
+```{r, echo = FALSE}
 knitr::kable(recoded[100:105,])
 ```
 
 <details>
-  <summary>Click to expand summary data from this table (ugly formatting, I hope to find an R tool that makes this easier to parse, like "proc freq" in SAS!)</summary>
-
+<summary> Click to expand summary data from this table </summary>
+This has ugly formatting :( I hope to find an R tool that makes this easier to parse, like "proc freq" in SAS!
 ``` {r}
 summary(recoded)
 #library(Hmisc)
