@@ -17,8 +17,8 @@ next steps:
       - Financial crisis
       - Drug use in general going down, but marijuana staying constant
   - Other exposures/predictors to look at:
-      - Broader “society attachment” / faith in institutions (ex. do you
-        think voting matters?)
+      - Broader “society attachment” / faith in institutions (ex. “do
+        you think voting matters?”)
       - Community/society engagement (not just attachment) - things like
         having a job, drivers license, community service
       - Deeper dive into gender differences?
@@ -32,6 +32,10 @@ Luckily, everything in the base set of community attachment measures,
 substance use, and most control variables are asked in form 1 (file 2).
 I’ll also need to pull some basic demographics from the core form (file
 1).
+
+<details>
+
+<summary>Click to see code & notes</summmary>
 
 ``` r
 all_years = 1976:2018
@@ -67,16 +71,17 @@ for (year in new_years) {
 }
 ```
 
+</details>
+
 ## Step 1: Create a smaller database that includes only the variables I need
 
-First, define the list of variables we want. The original paper includes
-demographics (control variables), measures of community attachment, and
-substance use.
+**First, define the list of variables we want.** The original paper
+includes demographics (control variables), measures of community
+attachment, and substance use.
 
 <details>
 
-<summary>Click to see all the variable names from the original
-paper.</summary>
+<summary>Click to see lists of variable names to include.</summary>
 
 ``` r
 demographics = c("R'S ID-SERIAL #",
@@ -143,15 +148,9 @@ substance_use = c("EVR SMK CIG,REGL",
 #    hallucinogens: include LSD & hall. other than LSD -- include MDMA? (I think no)
 ```
 
-</details>
-
-I’m potentially interested in a handful more variables, such as *X, Y,
-Z*.
-
-<details>
-
-<summary>Click to see the variable names that I’m adding
-in.</summary>
+I’m potentially interested in a handful more variables, such as *X, Y, Z
+(not added in
+yet\!)*.
 
 ``` r
 # TODO - fill in later. Make sure the variables are from the same forms or can somehow be compared against what we're already searching for...
@@ -159,8 +158,12 @@ in.</summary>
 
 </details>
 
-Get data from all participants for each of the variables above.
-Merge/combine by ID number and year.
+**Next, get data from all participants for each of the variables above.
+Merge/combine by ID number and year.**
+
+<details>
+
+<summary>Click to see code & notes</summmary>
 
 Notes:
 
@@ -195,8 +198,6 @@ raw_data_file2 = get_specific_data_by_years(path = "~/Documents/Code/MTF/MTFData
                                      )
 ```
 
-</details>
-
 ``` r
 raw_data_combined = inner_join(raw_data_file1, raw_data_file2, by = c("R'S ID-SERIAL #", "year"))
 
@@ -204,39 +205,50 @@ knitr::kable(raw_data_combined[100:105,])
 ```
 
 | \#CIGS SMKD/30DAY | \#X ALC/30D SIPS | \#X ALC/LIF SIPS | \#X AMPH/LAST30DAY | \#X AMPH/LIFETIME | \#X COKE/LAST30DAY | \#X COKE/LIFETIME | \#X DRNK/LAST30DAY | \#X DRNK/LIFETIME | \#X LSD/LAST30DAY | \#X LSD/LIFETIME | \#X NARC/LAST30DAY | \#X NARC/LIFETIME | \#X PSYD/LAST30DAY | \#X PSYD/LIFETIME | \#X SED/BARB/LAST30DAY | \#X SED/BARB/LIFETIME | \#X TRQL/LAST30DAY | \#X TRQL/LIFETIME | \#XMJ+HS/LAST30DAY | \#XMJ+HS/LIFETIME | 5+DRK ROW/LST 2W | EVR SMK CIG,REGL | FATHR EDUC LEVEL | grade.x | MOTHR EDUC LEVEL | R HS GRADE/D=1 | R WL DO 2YR CLG | R WL DO 4YR CLG | R’S ID-SERIAL \# | R’S RACE | R’S RACE B/W/H | R’S SEX | SAMPLING WEIGHT | year | grade.y | IMP CNTRBTN SOC | IMP CRRCT INEQL | IMP LDR COMUNTY | PPL CAN B TRSTD | PPL TRY B HLPFL | PPL TRY BE FAIR | R’ATTND REL SVC | RLGN IMP R’S LF |
-| ----------------: | ---------------: | ---------------: | -----------------: | ----------------: | -----------------: | ----------------: | -----------------: | ----------------: | ----------------: | ---------------: | -----------------: | ----------------: | -----------------: | ----------------: | ---------------------: | --------------------: | -----------------: | ----------------: | -----------------: | ----------------: | ---------------: | ---------------: | ---------------: | ------: | ---------------: | -------------: | --------------: | --------------: | ---------------: | -------: | -------------: | ------: | --------------: | ---: | ------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: |
-|                 1 |                1 |                5 |                  1 |                 1 |                  1 |                 1 |                \-8 |               \-8 |                 1 |                1 |                  1 |                 1 |                  1 |                 1 |                      1 |                     1 |                  1 |                 1 |                  1 |                 1 |                1 |                1 |                7 |      12 |                1 |              4 |               1 |               3 |            10100 |      \-8 |              3 |       1 |          1.4732 | 2009 |      12 |               3 |               2 |               2 |               1 |               1 |               1 |             \-9 |             \-9 |
-|                 4 |                3 |                7 |                  1 |                 1 |                  1 |                 1 |                \-8 |               \-8 |                 1 |                1 |                  1 |                 1 |                  1 |                 1 |                      1 |                     1 |                  1 |                 1 |                  1 |                 1 |                2 |                5 |                3 |      12 |                3 |              2 |               3 |               3 |            10101 |      \-8 |              2 |       1 |          1.3784 | 2009 |      12 |               2 |               2 |               3 |               2 |               1 |               1 |               4 |               3 |
-|                 1 |                1 |                3 |                  1 |                 1 |                  1 |                 1 |                \-8 |               \-8 |                 1 |                1 |                  1 |                 2 |                  1 |                 1 |                      1 |                     1 |                  1 |                 1 |                  1 |                 1 |                1 |                1 |                2 |      12 |                4 |              6 |               3 |               3 |            10102 |      \-8 |              2 |       2 |          2.5084 | 2009 |      12 |               3 |               3 |               2 |               1 |               2 |               2 |               2 |               3 |
-|                 4 |                2 |                7 |                  1 |                 1 |                  1 |                 1 |                \-8 |               \-8 |                 1 |                1 |                  1 |                 1 |                  1 |                 2 |                      1 |                     1 |                  1 |                 1 |                  4 |                 7 |                2 |                5 |                3 |      12 |                4 |              6 |               1 |               3 |            10103 |      \-8 |              2 |       2 |          0.3013 | 2009 |      12 |               3 |               4 |               4 |               1 |               2 |               1 |             \-9 |             \-9 |
-|                 1 |                1 |                1 |                \-9 |               \-9 |                  1 |                 1 |                \-8 |               \-8 |                 1 |                1 |                  1 |                 1 |                  1 |                 1 |                      1 |                     1 |                  1 |                 1 |                  1 |                 1 |                1 |                1 |                3 |      12 |                3 |              4 |               3 |               2 |            10104 |      \-8 |            \-9 |       2 |          1.4105 | 2009 |      12 |               3 |               3 |               2 |               1 |               2 |               1 |               4 |               4 |
-|                 1 |                2 |                4 |                  1 |                 1 |                  1 |                 1 |                \-8 |               \-8 |                 1 |                1 |                  1 |                 3 |                  1 |                 1 |                      1 |                     1 |                  1 |                 1 |                  1 |                 2 |                2 |                2 |                3 |      12 |                3 |              9 |               2 |               4 |            10105 |      \-8 |              2 |       2 |          1.0390 | 2009 |      12 |               2 |               1 |               2 |               1 |               1 |               2 |               2 |               2 |
+| :---------------- | :--------------- | :--------------- | :----------------- | :---------------- | :----------------- | :---------------- | :----------------- | :---------------- | :---------------- | :--------------- | :----------------- | :---------------- | :----------------- | :---------------- | :--------------------- | :-------------------- | :----------------- | :---------------- | :----------------- | :---------------- | :--------------- | :--------------- | :--------------- | :------ | :--------------- | :------------- | :-------------- | :-------------- | :--------------- | :------- | :------------- | :------ | :-------------- | :--- | :------ | :-------------- | :-------------- | :-------------- | :-------------- | :-------------- | :-------------- | :-------------- | :-------------- |
+| 1                 | 1                | 5                | 1                  | 1                 | 1                  | 1                 | \-8                | \-8               | 1                 | 1                | 1                  | 1                 | 1                  | 1                 | 1                      | 1                     | 1                  | 1                 | 1                  | 1                 | 1                | 1                | 7                | 12      | 1                | 4              | 1               | 3               | 10100            | \-8      | 3              | 1       | 1.4732          | 2009 | 12      | 3               | 2               | 2               | 1               | 1               | 1               | \-9             | \-9             |
+| 4                 | 3                | 7                | 1                  | 1                 | 1                  | 1                 | \-8                | \-8               | 1                 | 1                | 1                  | 1                 | 1                  | 1                 | 1                      | 1                     | 1                  | 1                 | 1                  | 1                 | 2                | 5                | 3                | 12      | 3                | 2              | 3               | 3               | 10101            | \-8      | 2              | 1       | 1.3784          | 2009 | 12      | 2               | 2               | 3               | 2               | 1               | 1               | 4               | 3               |
+| 1                 | 1                | 3                | 1                  | 1                 | 1                  | 1                 | \-8                | \-8               | 1                 | 1                | 1                  | 2                 | 1                  | 1                 | 1                      | 1                     | 1                  | 1                 | 1                  | 1                 | 1                | 1                | 2                | 12      | 4                | 6              | 3               | 3               | 10102            | \-8      | 2              | 2       | 2.5084          | 2009 | 12      | 3               | 3               | 2               | 1               | 2               | 2               | 2               | 3               |
+| 4                 | 2                | 7                | 1                  | 1                 | 1                  | 1                 | \-8                | \-8               | 1                 | 1                | 1                  | 1                 | 1                  | 2                 | 1                      | 1                     | 1                  | 1                 | 4                  | 7                 | 2                | 5                | 3                | 12      | 4                | 6              | 1               | 3               | 10103            | \-8      | 2              | 2       | 0.3013          | 2009 | 12      | 3               | 4               | 4               | 1               | 2               | 1               | \-9             | \-9             |
+| 1                 | 1                | 1                | \-9                | \-9               | 1                  | 1                 | \-8                | \-8               | 1                 | 1                | 1                  | 1                 | 1                  | 1                 | 1                      | 1                     | 1                  | 1                 | 1                  | 1                 | 1                | 1                | 3                | 12      | 3                | 4              | 3               | 2               | 10104            | \-8      | \-9            | 2       | 1.4105          | 2009 | 12      | 3               | 3               | 2               | 1               | 2               | 1               | 4               | 4               |
+| 1                 | 2                | 4                | 1                  | 1                 | 1                  | 1                 | \-8                | \-8               | 1                 | 1                | 1                  | 3                 | 1                  | 1                 | 1                      | 1                     | 1                  | 1                 | 1                  | 2                 | 2                | 2                | 3                | 12      | 3                | 9              | 2               | 4               | 10105            | \-8      | 2              | 2       | 1.0390          | 2009 | 12      | 2               | 1               | 2               | 1               | 1               | 2               | 2               | 2               |
 
 ``` r
 #summary(raw_data_combined)
 ```
 
-NOTES:
-
-  - Check in on the values here… there’s a lot more missing data (`-9`)
-    than I expected\!
-  - It would probably be helpful to recode `-9` as `NA` so I could take
-    advantage of R’s built-in understandings of missing data.
-  - I’d love a more useful quick representation of the data than
-    `summary()` provides (I’m imagining something like `proc freq` in
-    SAS…)
+</details>
 
 ## Step 2: Recode, create indicators/aggregate values, etc.
 
-At minimum: 1. Create social trust score 2. Create social responsibility
-score 3. Create religiosity score 4. Operationalize substance use
-(probably multiple different variables) 5. Combine momEd and dadEd into
-SES 6. Combine 2yr and 4yr college graduation expectations 7. Create
-dummy variable for each year of the survey, to account for historical
-trends. (Note: in original paper they did this and then found the dummy
-variables to not be significant. But it’s worth it for me to check, both
-for 2009-2018 and if I add in any new predictors or
-outcoems.)
+What I’ve done so far:
+
+1.  Create social trust score
+2.  Create social responsibility score
+3.  Create religiosity score
+4.  Combine substance use levels where appropriate (to make `other
+    illicit drugs` category)
+5.  Combine momEd and dadEd into SES
+6.  Combine 2yr and 4yr college graduation expectations
+7.  Recode all `-9` as `NA` to take advantage of R’s built-in handling
+    of missing data
+
+Haven’t done yet:
+
+8.  Create dummy variable for each year of the survey, to account for
+    historical trends. (Note: in original paper they did this and then
+    found the dummy variables to not be significant. But it’s worth it
+    for me to check, both for 2009-2018 and if I add in any new
+    predictors or outcoems.)
+9.  Dealt with missing data -\> Impute? Throw out any participants who
+    have any missing data?
+10. Make a definitive decision on how to handle the `race` variable
+    *NOTE - look to example from lab code\!*
+
+<details>
+
+<summary>Click to see the data wrangling
+code</summary>
 
 ``` r
 # TODO - remove 'NO_MISSING' versions of community attachment scores if I decide that's the right approach (currently not selected)
@@ -348,7 +360,11 @@ recoded = raw_data_combined %>%
          `Narcotics - Lifetime`,
          `Narcotics - 30 Day`,
          )
+```
 
+</details>
+
+``` r
 knitr::kable(recoded[100:105,])
 ```
 
@@ -361,9 +377,11 @@ knitr::kable(recoded[100:105,])
 |            10104 |          1.4105 | 2009 | Female | Other/missing |                  4 | 2-year college plans | 3                  |     1.333333 |              2.666667 |   1.3079516 |                     1 |                   1 |                  1 |                1 |              1 |                            1 |                          1 | No                             | No                           |                        1 |                      1 |                  1 |                1 |                      NA |                    NA |                       1 |                     1 |                        1 |                      1 |                    1 |                  1 |
 |            10105 |          1.0390 | 2009 | Female | White         |                  9 | 4-year college plans | 3                  |     1.333333 |              1.666667 | \-0.4812425 |                     2 |                   1 |                  4 |                2 |              2 |                            2 |                          1 | Yes                            | No                           |                        1 |                      1 |                  1 |                1 |                       1 |                     1 |                       1 |                     1 |                        1 |                      1 |                    3 |                  1 |
 
-<summary>Click to expand summary data</summary>
-
 <details>
+
+<summary>Click to expand summary data from this table (ugly formatting,
+I hope to find an R tool that makes this easier to parse, like “proc
+freq” in SAS\!)</summary>
 
 ``` r
 summary(recoded)
@@ -459,15 +477,30 @@ summary(recoded)
 
 </details>
 
+## Step 3: Build regression models
+
+Note: First I need to check assumptions\! (but I’m skipping that step
+for now) Also, those assumptions might change as I add in new variables,
+or analyze different sets of years, so this isn’t just a one-and-done
+process. One thing I immediately notice is that in the original paper,
+marijuana, cigarettes, and alcohol use were all coded as continuous and
+used as the outcomes for linear regression, even though some are heavily
+right-skewed. “Other illicit drugs” is a binary outcome for logistic
+regression.
+
 # Random questions and notes for later:
 
-  - Is religiosity driving the whole community attachment indicator?
-  - Somewhere, data from before 1990 is formatted differently (names of
-    columns), so I need to incorporate that into my code.
-  - Should I remove anyone who has missing data for any question? That
-    seems like a lot\!
-  - Do I need to code things as dummy variables, or does R have a way to
-    do regression without?
-      - Related: should everything be factors?
-  - When averaging things (like for social trust score) is it ok if
+**About the findings/context:**
+
+1.  Is religiosity driving the whole community attachment indicator?
+
+**About the data & R:**
+
+1.  Somewhere, data from before 1990 is formatted differently (the names
+    of the columns), so I need to incorporate that into my code if I
+    want to recreate the analysis from the original years, rather than
+    just update it for recent years
+2.  Do I need to code things as dummy variables, or does R have a way to
+    do regression without? –\> Related: should everything be factors?
+3.  When averaging things (like for social trust score) is it ok if
     you’re missing one of the 3 things to average?
