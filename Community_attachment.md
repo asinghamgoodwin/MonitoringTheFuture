@@ -360,7 +360,7 @@ recoded = raw_data_combined %>%
 
 </details>
 
-<br> Here’s a random snapshot of what the data looks like at this
+<br> Here’s a snapshot of what the data looks like at this
 point:
 
 | R’S ID-SERIAL \# | SAMPLING WEIGHT | year | Sex    | Race          | High school grades | College aspirations  | Parents’ education | Social Trust | Social Responsibility | Religiosity | Cigarettes - Lifetime | Cigarettes - 30 Day | Alcohol - Lifetime | Alcohol - 30 Day | Binge Drinking | Marijuana/Hashish – Lifetime | Marijuana/Hashish - 30 Day | Other illicit drugs – Lifetime | Other illicit drugs – 30 Day | Hallucinogens - Lifetime | Hallucinogens - 30 Day | Cocaine - Lifetime | Cocaine - 30 Day | Amphetamines - Lifetime | Amphetamines - 30 Day | Barbiturates - Lifetime | Barbiturates - 30 Day | Tranquilizers - Lifetime | Tranquilizers - 30 Day | Narcotics - Lifetime | Narcotics - 30 Day |
@@ -472,16 +472,166 @@ summary(recoded)
 
 </details>
 
-## Step 3: Build regression models
+## Step 3: Descriptive statistics
 
-Note: First I need to check assumptions\! (but I’m skipping that step
-for now) Also, those assumptions might change as I add in new variables,
-or analyze different sets of years, so this isn’t just a one-and-done
-process. One thing I immediately notice is that in the original paper,
-marijuana, cigarettes, and alcohol use were all coded as continuous and
-used as the outcomes for linear regression, even though some are heavily
+**1. Remove anyone with any missing data (this might not be sustainable
+moving forward)**
+
+    ## Observations in complete dataset:   23262
+
+    ## Observations with no missing data:  11908
+
+**2. Create table 1 / descriptive statistics**
+
+*QUESTION: does this take weights into account?*
+
+Only observations with no missing data:
+
+``` r
+library(tableone)
+CreateTableOne(data = recoded_without_missing)
+```
+
+    ##                                           
+    ##                                            Overall          
+    ##   n                                           11908         
+    ##   R'S ID-SERIAL # (mean (SD))              11389.25 (620.85)
+    ##   SAMPLING WEIGHT (mean (SD))                  0.99 (0.62)  
+    ##   year (mean (SD))                          2013.33 (2.87)  
+    ##   Sex = Male (%)                               5497 (46.2)  
+    ##   Race (%)                                                  
+    ##      Black                                     1365 (11.5)  
+    ##      Hispanic                                  1351 (11.3)  
+    ##      Other/missing                             1488 (12.5)  
+    ##      White                                     7704 (64.7)  
+    ##   High school grades (mean (SD))               6.90 (1.82)  
+    ##   College aspirations (%)                                   
+    ##      2-year college plans                       931 ( 7.8)  
+    ##      4-year college plans                     10305 (86.5)  
+    ##      No college plans                           672 ( 5.6)  
+    ##   Parents' education (%)                                    
+    ##      1                                          211 ( 1.8)  
+    ##      2                                          558 ( 4.7)  
+    ##      3                                         2096 (17.6)  
+    ##      4                                         2334 (19.6)  
+    ##      5                                         4026 (33.8)  
+    ##      6                                         2683 (22.5)  
+    ##   Social Trust (mean (SD))                     1.72 (0.57)  
+    ##   Social Responsibility (mean (SD))            2.66 (0.74)  
+    ##   Religiosity (mean (SD))                      0.02 (0.91)  
+    ##   Cigarettes - Lifetime (mean (SD))            1.60 (1.08)  
+    ##   Cigarettes - 30 Day (mean (SD))              1.24 (0.72)  
+    ##   Alcohol - Lifetime (mean (SD))               3.58 (2.17)  
+    ##   Alcohol - 30 Day (mean (SD))                 1.73 (1.17)  
+    ##   Binge Drinking (mean (SD))                   1.27 (0.74)  
+    ##   Marijuana/Hashish – Lifetime (mean (SD))     2.46 (2.17)  
+    ##   Marijuana/Hashish - 30 Day (mean (SD))       1.54 (1.38)  
+    ##   Other illicit drugs – Lifetime = Yes (%)     2159 (18.1)  
+    ##   Other illicit drugs – 30 Day = Yes (%)        618 ( 5.2)  
+    ##   Hallucinogens - Lifetime (mean (SD))         1.10 (0.54)  
+    ##   Hallucinogens - 30 Day (mean (SD))           1.02 (0.25)  
+    ##   Cocaine - Lifetime (mean (SD))               1.06 (0.45)  
+    ##   Cocaine - 30 Day (mean (SD))                 1.01 (0.20)  
+    ##   Amphetamines - Lifetime (mean (SD))          1.20 (0.85)  
+    ##   Amphetamines - 30 Day (mean (SD))            1.05 (0.39)  
+    ##   Barbiturates - Lifetime (mean (SD))          1.09 (0.54)  
+    ##   Barbiturates - 30 Day (mean (SD))            1.02 (0.19)  
+    ##   Tranquilizers - Lifetime (mean (SD))         1.12 (0.61)  
+    ##   Tranquilizers - 30 Day (mean (SD))           1.02 (0.22)  
+    ##   Narcotics - Lifetime (mean (SD))             1.20 (0.80)  
+    ##   Narcotics - 30 Day (mean (SD))               1.03 (0.29)
+
+**2b. Compare to previous results**
+
+![Original Table 1](OriginalPaperTable1.png)
+
+Notable differences: community attachments have stayed relatively
+similar (social responsibility went up a bit), but all types of
+substance use have gone down.
+
+**2c. Compare to when we don’t remove missing data? (later)**
+
+### Step 4: Build regression models
+
+I don’t yet know how to do this in R, so I’m going to export to CSV and
+complete the analysis in SAS.
+
+#### Check assumptions
+
+0.  Plot the shape of outcome variables and main predictors (just to see
+    how they seem)
+1.  **Check for unusual/influential data** - create and check plots for
+    datapoints where leverage + Rstudent are too big
+2.  **Normality (of residuals)** - plot histogram of residuals, look at
+    the plot, do Kolmogorov-Smirnov test
+3.  **Heteroscedasticity (of residuals)** - plot residuals
+    vs. regression line (can you do that with multivariable regression?
+    what are the axes?), look at the plots, do White test
+4.  **Multicolinearity** - create a table and look at Tolerance/VIF
+    (rough cutoff: VIF \> 10)
+5.  **Independence** - brainstorm what might make observations
+    not-independent (ex. ID, year, region, ??). plot outcome vs. those
+    variables, look for trends. What to do if we don’t have
+    independence??
+6.  **Nonlinearity** - ??? (how to plot this with multivariable
+    regression?)
+
+Note: These things might change as I add in new variables, or analyze
+different sets of years, so this isn’t just a one-and-done process. One
+thing I immediately notice is that in the original paper, marijuana,
+cigarettes, and alcohol use were all coded as continuous and used as the
+outcomes for linear regression, even though some are heavily
 right-skewed. “Other illicit drugs” is a binary outcome for logistic
 regression.
+
+#### Regression models
+
+1.  Make regression models for 5 outcomes from the original paper
+
+2.  Compare with previous results
+
+-----
+
+<details>
+
+<summary> Messing around with regression in R
+</summary>
+
+``` r
+firstModel = lm(`Cigarettes - Lifetime` ~ `Parents' education` + Sex + Religiosity, data=recoded)
+```
+
+``` r
+library(broom)
+firstModel %>% 
+  broom::tidy() %>% 
+  select(term, estimate, p.value) %>% 
+  mutate(term = str_replace(term, "Parents' education", "SES: ")) %>% 
+  knitr::kable(digits = 3)
+```
+
+| term        | estimate | p.value |
+| :---------- | -------: | ------: |
+| (Intercept) |    1.524 |   0.000 |
+| `SES:`2     |    0.202 |   0.010 |
+| `SES:`3     |    0.152 |   0.032 |
+| `SES:`4     |    0.125 |   0.078 |
+| `SES:`5     |    0.037 |   0.593 |
+| `SES:`6     |  \-0.005 |   0.938 |
+| SexMale     |    0.121 |   0.000 |
+| Religiosity |  \-0.179 |   0.000 |
+
+``` r
+#summary(firstModel)
+```
+
+``` r
+library(modelr)
+
+withPredictions = modelr::add_predictions(recoded, firstModel)
+```
+
+</details>
 
 # Random questions and notes for later:
 

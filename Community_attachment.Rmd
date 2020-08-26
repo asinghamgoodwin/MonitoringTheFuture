@@ -5,7 +5,7 @@ output: github_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-  cache = TRUE,
+#  cache = TRUE,
   echo = TRUE,
   fig.width = 6,
   fig.asp = .6,
@@ -333,7 +333,7 @@ recoded = raw_data_combined %>%
 </details>
 
 <br>
-Here's a random snapshot of what the data looks like at this point:
+Here's a snapshot of what the data looks like at this point:
 ```{r, echo = FALSE}
 knitr::kable(recoded[100:105,])
 ```
@@ -350,11 +350,97 @@ summary(recoded)
 ```
 </details>
 
-## Step 3: Build regression models
+## Step 3: Descriptive statistics
 
-Note: First I need to check assumptions! (but I'm skipping that step for now) Also, those assumptions might change as I add in new variables, or analyze different sets of years, so this isn't just a one-and-done process. One thing I immediately notice is that in the original paper, marijuana, cigarettes, and alcohol use were all coded as continuous and used as the outcomes for linear regression, even though some are heavily right-skewed. "Other illicit drugs" is a binary outcome for logistic regression.
+**1. Remove anyone with any missing data (this might not be sustainable moving forward)**
+
+```{r remove_missing, echo=FALSE}
+recoded_without_missing = na.omit(recoded)
+
+cat("Observations in complete dataset:  ", nrow(recoded), "\n")
+cat("Observations with no missing data: ", nrow(recoded_without_missing))
+```
+
+**2. Create table 1 / descriptive statistics**
+
+*QUESTION: does this take weights into account?*
+
+Only observations with no missing data:
+```{r recreate_table1}
+library(tableone)
+CreateTableOne(data = recoded_without_missing)
+```
+
+**2b. Compare to previous results**
+
+![Original Table 1](OriginalPaperTable1.png)
+
+Notable differences: community attachments have stayed relatively similar (social responsibility went up a bit), but all types of substance use have gone down.
+
+**2c. Compare to when we don't remove missing data? (later)**
+
+```{r, echo=FALSE, eval=FALSE}
+CreateTableOne(data = recoded)
+```
+
+### Step 4: Build regression models
+
+I don't yet know how to do this in R, so I'm going to export to CSV and complete the analysis in SAS.
+
+```{r export, echo=FALSE}
+write.csv(recoded_without_missing, "RecodedDataWithoutMissing.csv")
+```
+
+#### Check assumptions
+
+0. Plot the shape of outcome variables and main predictors (just to see how they seem)
+1. **Check for unusual/influential data** - create and check plots for datapoints where leverage + Rstudent are too big
+2. **Normality (of residuals)** - plot histogram of residuals, look at the plot, do Kolmogorov-Smirnov test
+3. **Heteroscedasticity (of residuals)** - plot residuals vs. regression line (can you do that with multivariable regression? what are the axes?), look at the plots, do White test
+4. **Multicolinearity** - create a table and look at Tolerance/VIF (rough cutoff: VIF > 10)
+5. **Independence** - brainstorm what might make observations not-independent (ex. ID, year, region, ??). plot outcome vs. those variables, look for trends. What to do if we don't have independence??
+6. **Nonlinearity** - ??? (how to plot this with multivariable regression?)
+
+Note: These things might change as I add in new variables, or analyze different sets of years, so this isn't just a one-and-done process. One thing I immediately notice is that in the original paper, marijuana, cigarettes, and alcohol use were all coded as continuous and used as the outcomes for linear regression, even though some are heavily right-skewed. "Other illicit drugs" is a binary outcome for logistic regression.
 
 
+#### Regression models
+
+1. Make regression models for 5 outcomes from the original paper
+
+2. Compare with previous results
+
+
+
+--------
+<details>
+<summary> Messing around with regression in R </summary>
+``` {r initial_regression}
+firstModel = lm(`Cigarettes - Lifetime` ~ `Parents' education` + Sex + Religiosity, data=recoded)
+```
+
+```{r}
+library(broom)
+firstModel %>% 
+  broom::tidy() %>% 
+  select(term, estimate, p.value) %>% 
+  mutate(term = str_replace(term, "Parents' education", "SES: ")) %>% 
+  knitr::kable(digits = 3)
+#summary(firstModel)
+```
+
+```{r, message=FALSE, warning=FALSE}
+library(modelr)
+
+withPredictions = modelr::add_predictions(recoded, firstModel)
+```
+
+```{r, eval=FALSE, echo=FALSE}
+ggplot(firstModel, aes(Religiosity)) +
+  geom_point(aes(y = `Cigarettes - Lifetime`)) +
+  geom_line(aes(y = pred), data = withPredictions, colour = "red", size = 1)
+```
+</details>
 
 # Random questions and notes for later:
 
