@@ -42,6 +42,7 @@ Luckily, everything in the base set of community attachment measures, substance 
 ```{r general_constants}
 all_years = 1976:2018
 old_years = 1976:2008
+medium_years = 1990:2008
 new_years = 2009:2018
 ```
 
@@ -227,22 +228,22 @@ recoded = raw_data_combined %>%
   na_if(., -8) %>% # This is how my code (and sometimes MTF) codes questions that weren't asked to a participant
   
   # Values we can use as-is without mutating:
-  rename(., `High school grades` = `R HS GRADE/D=1`,
-         `Cigarettes - Lifetime` = `EVR SMK CIG,REGL`,
-         `Cigarettes - 30 Day` = `#CIGS SMKD/30DAY`,
-         `Binge Drinking` = `5+DRK ROW/LST 2W`,
-         `Marijuana/Hashish – Lifetime` = `#XMJ+HS/LIFETIME`,
-         `Marijuana/Hashish - 30 Day` = `#XMJ+HS/LAST30DAY`,
-         `Cocaine - Lifetime` = `#X COKE/LIFETIME`,
-         `Cocaine - 30 Day` = `#X COKE/LAST30DAY`,
-         `Amphetamines - Lifetime` = `#X AMPH/LIFETIME`,
-         `Amphetamines - 30 Day` = `#X AMPH/LAST30DAY`,
-         `Barbiturates - Lifetime` = `#X SED/BARB/LIFETIME`,
-         `Barbiturates - 30 Day` = `#X SED/BARB/LAST30DAY`,
-         `Tranquilizers - Lifetime` = `#X TRQL/LIFETIME`,
-         `Tranquilizers - 30 Day` = `#X TRQL/LAST30DAY`,
-         `Narcotics - Lifetime` = `#X NARC/LIFETIME`,
-         `Narcotics - 30 Day` = `#X NARC/LAST30DAY`
+  rename(., `High_school_grades` = `R HS GRADE/D=1`,
+         `Cigarettes_Lifetime` = `EVR SMK CIG,REGL`,
+         `Cigarettes_30Day` = `#CIGS SMKD/30DAY`,
+         `Binge_Drinking` = `5+DRK ROW/LST 2W`,
+         `Marijuana_Lifetime` = `#XMJ+HS/LIFETIME`,
+         `Marijuana_30Day` = `#XMJ+HS/LAST30DAY`,
+         `Cocaine_Lifetime` = `#X COKE/LIFETIME`,
+         `Cocaine_30Day` = `#X COKE/LAST30DAY`,
+         `Amphetamines_Lifetime` = `#X AMPH/LIFETIME`,
+         `Amphetamines_30Day` = `#X AMPH/LAST30DAY`,
+         `Barbiturates_Lifetime` = `#X SED/BARB/LIFETIME`,
+         `Barbiturates_30Day` = `#X SED/BARB/LAST30DAY`,
+         `Tranquilizers_Lifetime` = `#X TRQL/LIFETIME`,
+         `Tranquilizers_30Day` = `#X TRQL/LAST30DAY`,
+         `Narcotics_Lifetime` = `#X NARC/LIFETIME`,
+         `Narcotics_30Day` = `#X NARC/LAST30DAY`
          ) %>% 
   
   # For both of these, 7 meant "I don't know / doesn't apply" so I'm recoding those as missing
@@ -259,75 +260,75 @@ recoded = raw_data_combined %>%
                                  `2` = 'White',
                                  `3` = 'Hispanic',
                                  .missing = 'Other/missing')), # White=1, Black=0, others=missing
-         `College aspirations` = as.factor(case_when(
+         `College_aspirations` = as.factor(case_when(
            `R WL DO 4YR CLG` %in% c(3, 4) ~ '4-year college plans',
            `R WL DO 2YR CLG` %in% c(3, 4) ~ '2-year college plans',
            `R WL DO 2YR CLG` %in% c(1, 2) ~ 'No college plans')), # coded with dummy variables
-         `Parents' education` = 
+         `Parents_education` = 
            as.factor(pmax(`MOTHR EDUC LEVEL`, `FATHR EDUC LEVEL`, na.rm = TRUE)) #NOTE - pmax does max comparissons element-by-element. if either value exists, return that instead of NA
          ) %>% 
   
   # Create social trust score and social responsibility score
-  mutate(., `Social Trust` = rowMeans(cbind(`PPL CAN B TRSTD`, `PPL TRY B HLPFL`, `PPL TRY BE FAIR`), na.rm = TRUE),
-         `Social Trust - NO_MISSING` = rowMeans(cbind(`PPL CAN B TRSTD`, `PPL TRY B HLPFL`, `PPL TRY BE FAIR`)),
-         `Social Responsibility` = rowMeans(cbind(`IMP CNTRBTN SOC`, `IMP CRRCT INEQL`, `IMP LDR COMUNTY`), na.rm = TRUE),
-         `Social Responsibility - NO_MISSING` = rowMeans(cbind(`IMP CNTRBTN SOC`, `IMP CRRCT INEQL`, `IMP LDR COMUNTY`))
+  mutate(., `Social_Trust` = rowMeans(cbind(`PPL CAN B TRSTD`, `PPL TRY B HLPFL`, `PPL TRY BE FAIR`), na.rm = TRUE),
+         `Social_Trust_NO_MISSING` = rowMeans(cbind(`PPL CAN B TRSTD`, `PPL TRY B HLPFL`, `PPL TRY BE FAIR`)),
+         `Social_Responsibility` = rowMeans(cbind(`IMP CNTRBTN SOC`, `IMP CRRCT INEQL`, `IMP LDR COMUNTY`), na.rm = TRUE),
+         `Social_Responsibility_NO_MISSING` = rowMeans(cbind(`IMP CNTRBTN SOC`, `IMP CRRCT INEQL`, `IMP LDR COMUNTY`))
          ) %>% 
   
   # Prep work and then create religiosity score
   mutate(., rel1scaled = scale(`R'ATTND REL SVC`),
          rel2scaled = scale(`RLGN IMP R'S LF`),
          `Religiosity` = rowMeans(cbind(rel1scaled, rel2scaled), na.rm = TRUE),
-         `Religiosity - NO_MISSING` = rowMeans(cbind(rel1scaled, rel2scaled))
+         `Religiosity_NO_MISSING` = rowMeans(cbind(rel1scaled, rel2scaled))
          ) %>% 
   
   # Substance use questions - renamed and recoded
   mutate(.,
-         `Hallucinogens - Lifetime` = pmax(`#X LSD/LIFETIME`, `#X PSYD/LIFETIME`, na.rm = TRUE), # Double check these are correct
-         `Hallucinogens - 30 Day` = pmax(`#X LSD/LAST30DAY`, `#X PSYD/LAST30DAY`, na.rm = TRUE),
-         `Alcohol - Lifetime` = case_when(
+         `Hallucinogens_Lifetime` = pmax(`#X LSD/LIFETIME`, `#X PSYD/LIFETIME`, na.rm = TRUE), # Double check these are correct
+         `Hallucinogens_30Day` = pmax(`#X LSD/LAST30DAY`, `#X PSYD/LAST30DAY`, na.rm = TRUE),
+         `Alcohol_Lifetime` = case_when(
            year <= 2016 ~ `#X ALC/LIF SIPS`,
            year > 2016 ~ `#X DRNK/LIFETIME`),
-         `Alcohol - 30 Day` = case_when(
+         `Alcohol_30Day` = case_when(
            year <= 2016 ~ `#X ALC/30D SIPS`,
            year > 2016 ~ `#X DRNK/LAST30DAY`),
-         `Other illicit drugs – Lifetime` = as.factor(case_when(
-           `Hallucinogens - Lifetime` > 1 | `Cocaine - Lifetime` > 1 |
-            `Amphetamines - Lifetime` > 1 | `Barbiturates - Lifetime` > 1 |
-            `Tranquilizers - Lifetime` > 1 | `Narcotics - Lifetime` > 1 ~ "Yes", # If their answer was greater than "none" for any illicit drug, code this as "yes"
+         `Other_illicit_drugs_Lifetime` = as.factor(case_when(
+           `Hallucinogens_Lifetime` > 1 | `Cocaine_Lifetime` > 1 |
+            `Amphetamines_Lifetime` > 1 | `Barbiturates_Lifetime` > 1 |
+            `Tranquilizers_Lifetime` > 1 | `Narcotics_Lifetime` > 1 ~ "Yes", # If their answer was greater than "none" for any illicit drug, code this as "yes"
            TRUE ~ "No")), # Otherwise, code as "No" --> could instead be 1/0
-         `Other illicit drugs – 30 Day` = as.factor(case_when(
-           `Hallucinogens - 30 Day` > 1 | `Cocaine - 30 Day` > 1 |
-            `Amphetamines - 30 Day` > 1 | `Barbiturates - 30 Day` > 1 |
-            `Tranquilizers - 30 Day` > 1 | `Narcotics - 30 Day` > 1 ~ "Yes",
+         `Other_illicit_drugs_30Day` = as.factor(case_when(
+           `Hallucinogens_30Day` > 1 | `Cocaine_30Day` > 1 |
+            `Amphetamines_30Day` > 1 | `Barbiturates_30Day` > 1 |
+            `Tranquilizers_30Day` > 1 | `Narcotics_30Day` > 1 ~ "Yes",
            TRUE ~ "No"))
          ) %>% 
   
   # Rearrange columns, and get rid of any we don't need any more
   select(., `R'S ID-SERIAL #`, `SAMPLING WEIGHT`,
-         year, Sex, Race, `High school grades`, `College aspirations`, `Parents' education`,
-         `Social Trust`, `Social Responsibility`, `Religiosity`,
-         `Cigarettes - Lifetime`,
-         `Cigarettes - 30 Day`,
-         `Alcohol - Lifetime`,
-         `Alcohol - 30 Day`,
-         `Binge Drinking`,
-         `Marijuana/Hashish – Lifetime`,
-         `Marijuana/Hashish - 30 Day`,
-         `Other illicit drugs – Lifetime`,
-         `Other illicit drugs – 30 Day`,
-         `Hallucinogens - Lifetime`,
-         `Hallucinogens - 30 Day`,
-         `Cocaine - Lifetime`,
-         `Cocaine - 30 Day`,
-         `Amphetamines - Lifetime`,
-         `Amphetamines - 30 Day`,
-         `Barbiturates - Lifetime`,
-         `Barbiturates - 30 Day`,
-         `Tranquilizers - Lifetime`,
-         `Tranquilizers - 30 Day`,
-         `Narcotics - Lifetime`,
-         `Narcotics - 30 Day`,
+         year, Sex, Race, `High_school_grades`, `College_aspirations`, `Parents_education`,
+         `Social_Trust`, `Social_Responsibility`, `Religiosity`,
+         `Cigarettes_Lifetime`,
+         `Cigarettes_30Day`,
+         `Alcohol_Lifetime`,
+         `Alcohol_30Day`,
+         `Binge_Drinking`,
+         `Marijuana_Lifetime`,
+         `Marijuana_30Day`,
+         `Other_illicit_drugs_Lifetime`,
+         `Other_illicit_drugs_30Day`,
+         `Hallucinogens_Lifetime`,
+         `Hallucinogens_30Day`,
+         `Cocaine_Lifetime`,
+         `Cocaine_30Day`,
+         `Amphetamines_Lifetime`,
+         `Amphetamines_30Day`,
+         `Barbiturates_Lifetime`,
+         `Barbiturates_30Day`,
+         `Tranquilizers_Lifetime`,
+         `Tranquilizers_30Day`,
+         `Narcotics_Lifetime`,
+         `Narcotics_30Day`,
          )
 ```
 </details>
@@ -383,17 +384,317 @@ Notable differences: community attachments have stayed relatively similar (socia
 CreateTableOne(data = recoded)
 ```
 
-### Step 4: Build regression models
+--------
+Prep for analysis:
 
-I don't yet know how to do this in R, so I'm going to export to CSV and complete the analysis in SAS.
+<details>
+<summary> Recoding variables to make it easy to use in SAS, and create different categories (click to see code) </summary>
+
+```{r recodedForSAS, echo=FALSE, eval=TRUE}
+# Create dummy variables for Race, College aspirations
+# Recode sex and OtherIllicitDrugs (both types) as 1 or 0
+# Recode parents edu as numerical (rather than factor levels)
+# Create category levels for cigarettes, alcohol, binge drinking, and marijuana
+
+forSAS = recoded_without_missing %>% 
+  mutate(., SexMale = as.numeric(recode(Sex,
+                                        'Male' = 1,
+                                        'Female' = 0)),
+         RaceWhite = as.numeric(case_when(
+                                        Race == 'White' ~ 1,
+                                        TRUE ~ 0)),
+         RaceBlack = as.numeric(case_when(
+                                        Race == 'Black' ~ 1,
+                                        TRUE ~ 0)),
+         No_college_plans = as.numeric(case_when(
+                                        College_aspirations == 'No college plans' ~ 1,
+                                        TRUE ~ 0)),
+         Two_year_college = as.numeric(case_when(
+                                        College_aspirations == '2-year college plans' ~ 1,
+                                        TRUE ~ 0)),
+         Other_illicit_drugs_Lifetime = as.numeric(recode(Other_illicit_drugs_Lifetime,
+                                        'Yes' = 1,
+                                        'No' = 0)),
+         Other_illicit_drugs_30Day = as.numeric(recode(Other_illicit_drugs_30Day,
+                                        'Yes' = 1,
+                                        'No' = 0)),
+         Parents_education = as.numeric(Parents_education),
+         Alcohol_Lifetime_cat = as.factor(case_when(
+                                        Alcohol_Lifetime == 1 ~ 'No use',
+                                        Alcohol_Lifetime == 2 | Alcohol_Lifetime == 3 ~ 'Occasional use',
+                                        TRUE ~ 'Frequent use')),
+         Alcohol_30Day_cat = as.factor(case_when(
+                                        Alcohol_30Day == 1 ~ 'No use',
+                                        Alcohol_30Day == 2 ~ 'Occasional use',
+                                        TRUE ~ 'Frequent use')),
+         Marijuana_Lifetime_cat = as.factor(case_when(
+                                        Marijuana_Lifetime == 1 ~ 'No use',
+                                        Marijuana_Lifetime == 2 | Marijuana_Lifetime == 3 ~ 'Occasional use',
+                                        TRUE ~ 'Frequent use')),
+         Marijuana_30Day_cat = as.factor(case_when(
+                                        Marijuana_30Day == 1 ~ 'No use',
+                                        Marijuana_30Day == 2 ~ 'Occasional use',
+                                        TRUE ~ 'Frequent use')),
+         Cigarettes_Lifetime_cat = as.factor(case_when(
+                                        Cigarettes_Lifetime == 1 ~ 'No use',
+                                        Cigarettes_Lifetime == 2 | Cigarettes_Lifetime == 3 ~ 'Occasional use',
+                                        TRUE ~ 'Frequent use')),
+         Cigarettes_30Day_cat = as.factor(case_when(
+                                        Cigarettes_30Day == 1 ~ 'No use',
+                                        Cigarettes_30Day == 2 ~ 'Occasional use',
+                                        TRUE ~ 'Frequent use')),
+         Binge_Drinking_cat = as.factor(case_when(
+                                        Binge_Drinking == 1 ~ 'None',
+                                        TRUE ~ 'Any'))
+  )
+
+#summary(forSAS)
+```
+
+</details>
+
+I don't yet know how to do all of the analysis in R, so I'm going to export to CSV and do some of the analysis in SAS.
 
 ```{r export, echo=FALSE}
 write.csv(recoded_without_missing, "RecodedDataWithoutMissing.csv")
+write.csv(forSAS, "forSAS.csv")
 ```
+
+-------
+
+### Visualizing the trends over time
+
+```{r prep_medium_years_for_visualization, include=FALSE}
+## Our variables of interest for this graph
+substance_use_small_set = c("#CIGS SMKD/30DAY",
+                  "#X ALC/30D SIPS",
+                  "#X DRNK/LAST30DAY",
+                  "#XMJ+HS/LAST30DAY"
+                  )
+
+variables_to_include = c(substance_use_small_set, community_attachment)
+
+## Getting the data
+grade12_file1_mappingMED = tibble()
+grade12_file2_mappingMED = tibble()
+
+for (year in medium_years) {
+  grade12_file1_mappingMED = rbind(grade12_file1_mappingMED,
+                                create_mapping(path = "~/Documents/Code/MTF/MTFData/12th_grade/",
+                                               year = year,
+                                               file_number = 1
+                                               )
+                                )
+    grade12_file2_mappingMED = rbind(grade12_file2_mappingMED,
+                                create_mapping(path = "~/Documents/Code/MTF/MTFData/12th_grade/",
+                                               year = year,
+                                               file_number = 2
+                                               )
+                                )
+}
+```
+
+``` {r, include=FALSE}
+raw_data_file1MED = get_specific_data_by_years(path = "~/Documents/Code/MTF/MTFData/12th_grade/",
+                                     file_number = 1,
+                                     years = medium_years,
+                                     mapping = grade12_file1_mappingMED,
+                                     variables_to_include = c("R'S ID-SERIAL #", 
+                                                              "SAMPLING WEIGHT",
+                                                              substance_use_small_set)
+                                     )
+
+raw_data_file2MED = get_specific_data_by_years(path = "~/Documents/Code/MTF/MTFData/12th_grade/",
+                                     file_number = 2,
+                                     years = medium_years,
+                                     mapping = grade12_file2_mappingMED,
+                                     variables_to_include = c("R'S ID-SERIAL #",
+                                                              community_attachment)
+                                     )
+
+raw_data_combinedMED = inner_join(raw_data_file1MED, raw_data_file2MED, by = c("R'S ID-SERIAL #", "year"))
+
+
+## Data wrangling / cleanup
+recodedMED = raw_data_combinedMED %>% 
+  na_if(., -9) %>% # This is how MTF codes missing values
+  na_if(., -8) %>% # This is how my code (and sometimes MTF) codes questions that weren't asked to a participant
+  
+  # Values we can use as-is without mutating:
+  rename(.,
+         `Cigarettes_30Day` = `#CIGS SMKD/30DAY`,
+         `Marijuana_30Day` = `#XMJ+HS/LAST30DAY`,
+         ) %>% 
+  
+  # Create social trust score and social responsibility score
+  mutate(., `Social_Trust` = rowMeans(cbind(`PPL CAN B TRSTD`, `PPL TRY B HLPFL`, `PPL TRY BE FAIR`), na.rm = TRUE),
+         `Social_Trust_NO_MISSING` = rowMeans(cbind(`PPL CAN B TRSTD`, `PPL TRY B HLPFL`, `PPL TRY BE FAIR`)),
+         `Social_Responsibility` = rowMeans(cbind(`IMP CNTRBTN SOC`, `IMP CRRCT INEQL`, `IMP LDR COMUNTY`), na.rm = TRUE),
+         `Social_Responsibility_NO_MISSING` = rowMeans(cbind(`IMP CNTRBTN SOC`, `IMP CRRCT INEQL`, `IMP LDR COMUNTY`))
+         ) %>% 
+  
+  # Prep work and then create religiosity score
+  mutate(., rel1scaled = scale(`R'ATTND REL SVC`),
+         rel2scaled = scale(`RLGN IMP R'S LF`),
+         `Religiosity` = rowMeans(cbind(rel1scaled, rel2scaled), na.rm = TRUE),
+         `Religiosity_NO_MISSING` = rowMeans(cbind(rel1scaled, rel2scaled))
+         ) %>% 
+  
+  # Substance use questions - renamed and recoded
+  mutate(.,
+         `Alcohol_30Day` = case_when(
+           year >= 1994 ~ `#X ALC/30D SIPS`,
+           year < 1994 ~ `#X DRNK/LAST30DAY`)
+         ) %>% 
+  select(.,
+         year,
+         Alcohol_30Day,
+         Cigarettes_30Day,
+         Marijuana_30Day,
+         Social_Trust,
+         Social_Responsibility,
+         Religiosity,
+         `SAMPLING WEIGHT`
+         )
+
+recoded_without_missingMED = na.omit(recodedMED)
+```
+
+``` {r, include=FALSE}
+forSASsmall = forSAS %>% 
+  select(.,
+         year,
+         Alcohol_30Day,
+         Cigarettes_30Day,
+         Marijuana_30Day,
+         Social_Trust,
+         Social_Responsibility,
+         Religiosity,
+         `SAMPLING WEIGHT`
+         )
+
+combined_years = bind_rows(recodedMED, forSASsmall)
+
+# AFTER THAT: make two graphs, mapping mean community attachment scores.
+
+```
+
+```{r graphs, include=FALSE}
+to_graph = tibble(year = c(1990:2019))
+
+for (variable in c('Alcohol_30Day',
+              'Cigarettes_30Day',
+              'Marijuana_30Day'
+              #Social_Trust,
+              #Social_Responsibility,
+              #Religiosity
+              )) {
+    
+  counts = combined_years %>% 
+    mutate(.,
+           matches_criteria = 
+             case_when(!!sym(variable) %in% 2:7 ~ "yes",
+                       !!sym(variable) == 1 ~ "no",
+                       TRUE ~ "leave out")
+    ) %>% 
+    group_by(., year) %>% 
+    count(., matches_criteria, wt = `SAMPLING WEIGHT`)
+  
+  percent_yes_db = counts %>%
+    pivot_wider(., names_from = matches_criteria, values_from = n) %>%
+    mutate(.,
+           !!as.name(variable) := (yes / (yes + no))*100
+    ) %>%
+    select(., year, !!as.name(variable)) %>%
+    ungroup(.)
+  
+  to_graph = inner_join(to_graph, percent_yes_db, by = 'year')
+}
+
+for (variable in c(
+              "Social_Trust",
+              "Social_Responsibility",
+              "Religiosity"
+              )) {
+    
+  counts = combined_years %>% 
+    group_by(., year) %>% 
+    summarize(., !!as.name(variable) := mean(!!sym(variable), wt = `SAMPLING WEIGHT`, na.rm = TRUE))
+  
+  to_graph = inner_join(to_graph, counts, by = 'year')
+}
+```
+
+```{r, include=FALSE}
+to_graph = pivot_longer(to_graph, cols = c(Alcohol_30Day,
+                                           Cigarettes_30Day,
+                                           Marijuana_30Day),
+                        names_to = "Substance",
+                        values_to = "percent")
+
+to_graph = pivot_longer(to_graph, cols = c(Social_Trust,
+                                           Social_Responsibility
+                                           #Religiosity
+                                           ),
+                        names_to = "Community Attachment",
+                        values_to = "Mean Score")
+
+```
+
+```{r, echo=FALSE}
+plot = ggplot(to_graph, aes(x = year, y = percent, color = Substance)) +
+  geom_line() + geom_vline(xintercept=2009, linetype="dashed", color = "red") +
+
+  labs(
+    title = "Percent of 12th graders reporting any substance use in the past 30 days",
+    x = "Year",
+    y = "Prevalence"
+  )  + theme(plot.title = element_text(size = 13, face = "bold"))
+  #+ scale_x_continuous(breaks = seq(1990, 2018, 2))
+plot
+
+plot2 = ggplot(to_graph, aes(x = year, y = `Mean Score`, color = `Community Attachment`)) +
+  geom_line() + scale_color_brewer(palette="Dark2") + geom_vline(xintercept=2009, linetype="dashed", color = "red") +
+
+  labs(
+    title = "Mean yearly score for each social trust and responsibility",
+    x = "Year",
+    y = "Mean Score"
+  ) + theme(plot.title = element_text(size = 13, face = "bold"))
+  #+ scale_x_continuous(breaks = seq(1990, 2018, 2))
+plot2
+
+```
+
+
+### Step 4: Build regression models
+
+But first, here's a look at the correlations from the original paper and from my more recent data:
+
+![Correlations_new](CommunityAttachmentImages/Correlations_new.png)
+![Correlations_old](CommunityAttachmentImages/Correlations_old.png)
+*Question: Should I be running these correlations against the raw data, or against the new variables that I created by dichotomozing/categorizing the outcomes in different ways? Here, I've done the "raw" data*
+
+**Overall observation** Across each outcome, the correlations with social trust are a little higher, and the correlations with social responsibility and religiosity are both a little lower.
 
 #### Check assumptions
 
-0. Plot the shape of outcome variables and main predictors (just to see how they seem)
+0. Plot the shape of outcome variables and main predictors (just to see how they seem).
+
+<details>
+<summary>Show plots (done in SAS)</summary>
+
+![Alcohol_Lifetime](CommunityAttachmentImages/Distributions/AlcLifetime.png)
+![Alcohol_30Day](CommunityAttachmentImages/Distributions/Alc30Day.png)
+![Binge_drinking](CommunityAttachmentImages/Distributions/Binge.png)
+![Cigarette_Lifetime](CommunityAttachmentImages/Distributions/CigLifetime.png)
+![Cigarette_30Day](CommunityAttachmentImages/Distributions/Cig30Day.png)
+![OtherDrugs_Lifetime](CommunityAttachmentImages/Distributions/OtherDrugsLifetime.png)
+![OtherDrugs_30Day](CommunityAttachmentImages/Distributions/OtherDrugs30Day.png)
+
+</details>
+</br>
+
 1. **Check for unusual/influential data** - create and check plots for datapoints where leverage + Rstudent are too big
 2. **Normality (of residuals)** - plot histogram of residuals, look at the plot, do Kolmogorov-Smirnov test
 3. **Heteroscedasticity (of residuals)** - plot residuals vs. regression line (can you do that with multivariable regression? what are the axes?), look at the plots, do White test
@@ -401,46 +702,138 @@ write.csv(recoded_without_missing, "RecodedDataWithoutMissing.csv")
 5. **Independence** - brainstorm what might make observations not-independent (ex. ID, year, region, ??). plot outcome vs. those variables, look for trends. What to do if we don't have independence??
 6. **Nonlinearity** - ??? (how to plot this with multivariable regression?)
 
-Note: These things might change as I add in new variables, or analyze different sets of years, so this isn't just a one-and-done process. One thing I immediately notice is that in the original paper, marijuana, cigarettes, and alcohol use were all coded as continuous and used as the outcomes for linear regression, even though some are heavily right-skewed. "Other illicit drugs" is a binary outcome for logistic regression.
+Note: These things might change as I add in new variables, or analyze different sets of years, so this isn't just a one-and-done process. One thing I immediately notice is that in the original paper, marijuana, cigarettes, and alcohol use were all coded as continuous and used as the outcomes for linear regression, even though some are heavily right-skewed, and the categories aren't even necessarily ordered. "Other illicit drugs" is a binary outcome for logistic regression.
+*--> I've decided to recode (above) to make all outcomes unordered categorical or binary variables*
 
+I don't know how to check all of the assumptions above, but it's a good roadmap for if I were going to do this analysis more rigorously.
 
 #### Regression models
 
-1. Make regression models for 5 outcomes from the original paper
+1. Make regression models for 9 outcomes from the original paper
+
+<details>
+<summary> Regression output </summary>
+```{r logit, echo=FALSE}
+## NOTE 1: I'd love for this to be a function where I pass in different outcome values, but I can't figure out how, since I'm not sure if I'm supposed to be passing in a string, a symbol, etc. So for now it's just a lot of copy-pasting :(
+
+## NOTE 2: I'm not sure how to do polytomous regression in R, so I'm pasting in those outputs from SAS
+
+# cat("\n\nCigarettes - Lifetime\n")
+# logit1 <- glm(Cigarettes_Lifetime ~ 
+#               Social_Trust + Social_Responsibility + Religiosity + 
+# 		          SexMale + RaceWhite + RaceBlack + High_school_grades + 
+# 		          No_college_plans + Two_year_college + Parents_education,
+#               data = forSAS,
+# 		          family = "binomial")
+# summary(logit1)
+# exp(cbind(OR = coef(logit1), confint(logit1)))
+# 
+# cat("\n\nCigarettes - 30 Day\n")
+# logit2 <- glm(Cigarettes_30Day ~ 
+#               Social_Trust + Social_Responsibility + Religiosity + 
+# 		          SexMale + RaceWhite + RaceBlack + High_school_grades + 
+# 		          No_college_plans + Two_year_college + Parents_education,
+#               data = forSAS,
+# 		          family = "binomial")
+# summary(logit2)
+# exp(cbind(OR = coef(logit2), confint(logit2)))
+# 
+# cat("\n\nAlcohol - Lifetime\n")
+# logit3 <- glm(Alcohol_Lifetime ~ 
+#               Social_Trust + Social_Responsibility + Religiosity + 
+# 		          SexMale + RaceWhite + RaceBlack + High_school_grades + 
+# 		          No_college_plans + Two_year_college + Parents_education,
+#               data = forSAS,
+# 		          family = "binomial")
+# summary(logit3)
+# exp(cbind(OR = coef(logit3), confint(logit3)))
+# 
+# cat("\n\nAlcohol - 30 Day\n")
+# logit4 <- glm(Alcohol_30Day ~ 
+#               Social_Trust + Social_Responsibility + Religiosity + 
+# 		          SexMale + RaceWhite + RaceBlack + High_school_grades + 
+# 		          No_college_plans + Two_year_college + Parents_education,
+#               data = forSAS,
+# 		          family = "binomial")
+# summary(logit4)
+# exp(cbind(OR = coef(logit4), confint(logit4)))
+
+cat("\n\nBinge Drinking\n")
+logit5 <- glm(as.factor(recode(Binge_Drinking, 'None' = 0, 'Any' = 1)) ~ 
+              Social_Trust + Social_Responsibility + Religiosity + 
+		          SexMale + RaceWhite + RaceBlack + High_school_grades + 
+		          No_college_plans + Two_year_college + Parents_education,
+              data = forSAS,
+		          family = "binomial")
+summary(logit5)
+exp(cbind(OR = coef(logit5), confint(logit5)))
+
+# cat("\n\nMarijuana - Lifetime\n")
+# logit6 <- glm(Marijuana_Lifetime ~ 
+#               Social_Trust + Social_Responsibility + Religiosity + 
+# 		          SexMale + RaceWhite + RaceBlack + High_school_grades + 
+# 		          No_college_plans + Two_year_college + Parents_education,
+#               data = forSAS,
+# 		          family = "binomial")
+# summary(logit6)
+# exp(cbind(OR = coef(logit6), confint(logit6)))
+# 
+# cat("\n\nMarijuana - 30 Day\n")
+# logit7 <- glm(Marijuana_30Day ~ 
+#               Social_Trust + Social_Responsibility + Religiosity + 
+# 		          SexMale + RaceWhite + RaceBlack + High_school_grades + 
+# 		          No_college_plans + Two_year_college + Parents_education,
+#               data = forSAS,
+# 		          family = "binomial")
+# summary(logit7)
+# exp(cbind(OR = coef(logit7), confint(logit7)))
+
+cat("\n\nOther Illicit Drugs - Lifetime\n")
+logit8 <- glm(Other_illicit_drugs_Lifetime ~ 
+              Social_Trust + Social_Responsibility + Religiosity + 
+		          SexMale + RaceWhite + RaceBlack + High_school_grades + 
+		          No_college_plans + Two_year_college + Parents_education,
+              data = forSAS,
+		          family = "binomial")
+summary(logit8)
+exp(cbind(OR = coef(logit8), confint(logit8)))
+
+cat("\n\nOther Illicit Drugs - 30 Day\n")
+logit9 <- glm(Other_illicit_drugs_30Day ~ 
+              Social_Trust + Social_Responsibility + Religiosity + 
+		          SexMale + RaceWhite + RaceBlack + High_school_grades + 
+		          No_college_plans + Two_year_college + Parents_education,
+              data = forSAS,
+		          family = "binomial")
+summary(logit9)
+exp(cbind(OR = coef(logit9), confint(logit9)))
+
+```
+
+From SAS:
+![Alcohol_Lifetime](CommunityAttachmentImages/AlcLifetime.png)
+![Alcohol_30Day](CommunityAttachmentImages/Alc30Day.png)
+![Cigarette_Lifetime](CommunityAttachmentImages/CigLifetime.png)
+![Cigarette_30Day](CommunityAttachmentImages/Cig30Day.png)
+![OtherDrugs_Lifetime](CommunityAttachmentImages/MjLifetime.png)
+![OtherDrugs_30Day](CommunityAttachmentImages/Mj30Day.png)
+
+</details>
+
+**Main results**
+
 
 2. Compare with previous results
 
-
-
---------
 <details>
-<summary> Messing around with regression in R </summary>
-``` {r initial_regression}
-firstModel = lm(`Cigarettes - Lifetime` ~ `Parents' education` + Sex + Religiosity, data=recoded)
-```
+<summary> Click here to see the regression models from the original paper</summary>
 
-```{r}
-library(broom)
-firstModel %>% 
-  broom::tidy() %>% 
-  select(term, estimate, p.value) %>% 
-  mutate(term = str_replace(term, "Parents' education", "SES: ")) %>% 
-  knitr::kable(digits = 3)
-#summary(firstModel)
-```
+![Table3](CommunityAttachmentImages/Table3_old.png)
+![Table4](CommunityAttachmentImages/Table4_old.png)
 
-```{r, message=FALSE, warning=FALSE}
-library(modelr)
-
-withPredictions = modelr::add_predictions(recoded, firstModel)
-```
-
-```{r, eval=FALSE, echo=FALSE}
-ggplot(firstModel, aes(Religiosity)) +
-  geom_point(aes(y = `Cigarettes - Lifetime`)) +
-  geom_line(aes(y = pred), data = withPredictions, colour = "red", size = 1)
-```
 </details>
+
+**Relevant comparissons**
 
 # Random questions and notes for later:
 
@@ -454,3 +847,4 @@ ggplot(firstModel, aes(Religiosity)) +
 2. Do I need to code things as dummy variables, or does R have a way to do regression without?
 --> Related: should everything be factors?
 3. When averaging things (like for social trust score) is it ok if you're missing one of the 3 things to average?
+--> Answer: this might be a good candidate for imputation (and all the other missing data as well)
